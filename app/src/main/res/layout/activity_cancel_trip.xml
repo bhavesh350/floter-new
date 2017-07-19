@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="?actionBarSize"
+        android:background="?colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <TextView
+            android:id="@+id/feedhead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Cancel Trip"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dim_20"
+            android:typeface="serif" />
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white">
+
+        <RadioGroup
+            android:id="@+id/radio_group"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/radio1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dim_20"
+                android:layout_marginTop="@dimen/dim_10"
+                android:checked="true"
+                android:drawablePadding="@dimen/dim_10"
+                android:text="Booked another vehicle"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <RadioButton
+                android:id="@+id/radio2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dim_20"
+                android:drawablePadding="@dimen/dim_10"
+                android:text="My Reason is not Listed"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <RadioButton
+                android:id="@+id/radio3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dim_20"
+                android:drawablePadding="@dimen/dim_10"
+                android:text="Driver was not allocated"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <RadioButton
+                android:id="@+id/radio4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dim_20"
+                android:drawablePadding="@dimen/dim_10"
+                android:text="Changed my mind"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+        </RadioGroup>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/txt_submit"
+            android:layout_margin="@dimen/dim_20"
+            android:background="@drawable/rounded_corner_search"
+            android:gravity="start"
+            android:hint="Comment"
+            android:maxLines="4"
+            android:minLines="4"
+            android:padding="@dimen/dim_10" />
+
+        <Button
+            android:id="@+id/txt_submit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dim_18"
+            android:textStyle="bold"
+            android:typeface="serif" />
+    </RelativeLayout>
+</LinearLayout>

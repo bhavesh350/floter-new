@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="?actionBarSize"
+            android:background="?colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <ImageView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:foregroundGravity="center_horizontal"
+                android:src="@drawable/img_toolbar"
+                android:textColor="@color/white"
+                android:textSize="20.0sp"
+                android:textStyle="bold" />
+        </android.support.v7.widget.Toolbar>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="@dimen/dim_20">
+
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_above="@+id/ll_bottom" />
+
+                <LinearLayout
+                    android:id="@+id/locationMarker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/dim_30"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/locMarkertext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner_map"
+                        android:drawablePadding="@dimen/dim_15"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/dim_10"
+                        android:paddingLeft="@dimen/dim_30"
+                        android:paddingRight="@dimen/dim_30"
+                        android:paddingTop="@dimen/dim_10"
+                        android:text="15 Min Book Now >"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/dim_16"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/txt_book_later"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner_map"
+                        android:drawableLeft="@drawable/ic_timer"
+                        android:drawablePadding="@dimen/dim_10"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/dim_4"
+                        android:paddingLeft="@dimen/dim_20"
+                        android:paddingRight="@dimen/dim_20"
+                        android:paddingTop="@dimen/dim_4"
+                        android:text="|   Select Time >"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/dim_16"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/imageMarker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/marker" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dim_5"
+                android:layout_marginRight="@dimen/dim_5"
+                android:layout_marginTop="@dimen/dim_5"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/Locality"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:drawableLeft="@drawable/ic_btn_current_location"
+                    android:drawablePadding="@dimen/dim_10"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/dim_10"
+                    android:text="Enter source location"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dim_16" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dim_5" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <Button
+                        android:id="@+id/btnFindPath"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Find path" />
+
+                    <ImageView
+                        android:layout_width="40.0dip"
+                        android:layout_height="40.0dip"
+                        android:layout_marginLeft="20.0dip"
+                        android:layout_marginTop="5.0dip"
+                        android:src="@drawable/ic_distance" />
+
+                    <TextView
+                        android:id="@+id/tvDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5.0dip"
+                        android:text="0 km" />
+
+                    <ImageView
+                        android:layout_width="40.0dip"
+                        android:layout_height="40.0dip"
+                        android:layout_marginLeft="20.0dip"
+                        android:layout_marginTop="5.0dip"
+                        android:padding="5.0dip"
+                        android:src="@drawable/ic_clock" />
+
+                    <TextView
+                        android:id="@+id/tvDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5.0dip"
+                        android:text="0 min" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_truck"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/dim_20"
+                android:background="@drawable/gradient_bg">
+
+                <cargo.floter.user.utils.HorizontalPicker
+                    android:id="@+id/picker"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dim_12"
+                    android:layout_marginLeft="@dimen/dim_32"
+                    android:layout_marginTop="@dimen/dim_15"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="2"
+                    android:paddingBottom="16.0dip"
+                    android:paddingTop="16.0dip"
+                    android:textColor="@color/black"
+                    android:textSize="22.0sp"
+                    app:dividerSize="10.0dip"
+                    app:images="@array/truckIcons"
+                    app:sideItems="@integer/numSideItems"
+                    app:values="@array/values" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_bottom"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimary">
+
+                <Button
+                    android:id="@+id/btn_book"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:background="@color/colorPrimary"
+                    android:text="Book Now"
+                    android:textColor="@color/white" />
+
+                <RelativeLayout
+                    android:layout_width="@dimen/dim_100"
+                    android:layout_height="10.0dip" />
+
+                <Button
+                    android:id="@+id/btn_book_later"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:background="@color/colorPrimary"
+                    android:text="Book Later"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/truck_info"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/rl_truck"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:id="@+id/click_truck"
+                    android:layout_width="@dimen/dim_85"
+                    android:layout_height="@dimen/dim_85"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/truck_circle_bg">
+
+                    <ImageView
+                        android:id="@+id/img_selected_truck"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/txt_name_truck"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="@dimen/dim_10"
+                        android:layout_marginRight="@dimen/dim_10"
+                        android:layout_marginTop="@dimen/dim_10"
+                        android:src="@drawable/truck_piaggio_active" />
+
+                    <TextView
+                        android:id="@+id/txt_name_truck"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="@dimen/dim_5"
+                        android:layout_marginRight="@dimen/dim_5"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/dim_10"
+                        android:text="Tata Ace Super"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/dim_12" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/ll_info"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_above="@+id/truck_info"
+                android:background="#00000000"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dim_20">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dim_15"
+                        android:layout_marginRight="@dimen/dim_15"
+                        android:layout_marginTop="@dimen/dim_15">
+
+                        <TextView
+                            android:id="@+id/base_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="Rs 400"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/dim_15"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_below="@+id/base_price"
+                            android:text="Min Fare"
+                            android:textSize="@dimen/dim_15" />
+
+                        <TextView
+                            android:id="@+id/per_km_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="Rs 12/ km"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/dim_15"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txt_some"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/per_km_price"
+                            android:text="After 2 Km"
+                            android:textSize="@dimen/dim_15" />
+
+                        <TextView
+                            android:id="@+id/per_min_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/txt_some"
+                            android:layout_centerHorizontal="true"
+                            android:text="Rs 2/ min"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/dim_15"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txt_loading_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/per_min_price"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
+                            android:text="Loading &amp; Unloading free time"
+                            android:textSize="@dimen/dim_15" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dim_15"
+                        android:layout_marginRight="@dimen/dim_15"
+                        android:layout_marginTop="@dimen/dim_15">
+
+                        <TextView
+                            android:id="@+id/pay_load"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="1000 KG"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/dim_15"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_below="@+id/pay_load"
+                            android:text="Capacity"
+                            android:textSize="@dimen/dim_15" />
+
+                        <TextView
+                            android:id="@+id/dimension"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="7x4x5"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/dim_15"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/dimension"
+                            android:text="LxBxH"
+                            android:textSize="@dimen/dim_15" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/fragment_navigation_drawer"
+        android:name="cargo.floter.user.fragments.FragmentDrawer"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="start"
+        app:layout="@layout/fragment_navigation_drawer" />
+</android.support.v4.widget.DrawerLayout>

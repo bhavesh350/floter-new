@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg">
+
+    <TextView
+        android:id="@+id/manually_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/dim_10"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dim_22"
+        android:textStyle="bold"
+        android:layout_marginBottom="14dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/txt_resend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/manually_code"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dim_10"
+        android:padding="@dimen/dim_5"
+        android:text="RESEND OTP"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dim_18"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/txt_resend"
+        android:layout_marginBottom="@dimen/dim_30"
+        android:layout_marginLeft="@dimen/dim_50"
+        android:layout_marginRight="@dimen/dim_50"
+        android:background="@drawable/gradient_bg"
+        android:gravity="center"
+        android:padding="@dimen/dim_10"
+        android:text="SUBMIT"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_hang"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dim_50"
+        android:gravity="center"
+        android:padding="@dimen/dim_10"
+        android:text="Please hang on"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dim_30" />
+
+    <TextView
+        android:id="@+id/txt1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_hang"
+        android:layout_marginLeft="@dimen/dim_30"
+        android:layout_marginRight="@dimen/dim_30"
+        android:gravity="center"
+        android:padding="@dimen/dim_10"
+        android:text="We are trying to auto verify your number with the SMS sent to"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dim_15"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_mobile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt1"
+        android:layout_centerHorizontal="true"
+        android:text="999999999"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dim_18" />
+
+    <EditText
+        android:id="@+id/edt_verify_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt1"
+        android:layout_marginLeft="@dimen/dim_50"
+        android:layout_marginRight="@dimen/dim_50"
+        android:layout_marginTop="@dimen/dim_70"
+        android:background="@null"
+        android:enabled="false"
+        android:gravity="center"
+        android:inputType="number"
+        android:maxLines="1"
+        android:padding="@dimen/dim_10"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dim_22"
+        android:textStyle="bold" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dim_50"
+        android:background="@null"
+        android:inputType="number"
+        android:maxLines="1"
+        android:padding="@dimen/dim_10" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_1"
+        android:layout_below="@+id/edt_verify_number"
+        android:layout_marginLeft="@dimen/dim_50"
+        android:layout_marginRight="@dimen/dim_50"
+        android:background="@color/white" />
+
+</RelativeLayout>

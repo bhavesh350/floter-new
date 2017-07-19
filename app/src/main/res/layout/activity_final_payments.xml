@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="?actionBarSize"
+            android:background="?colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <TextView
+                android:id="@+id/feedhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Payment &amp; Feedback"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dim_20"
+                android:typeface="serif" />
+        </android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dim_10"
+            android:gravity="center"
+            android:text="Your Trip Fare was"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/txt_payment"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/dim_10"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dim_30"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/dim_5"
+            android:text="Your trip was\nfrom"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/txt_from_location"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dim_5"
+            android:drawableLeft="@drawable/ic_btn_current_location"
+            android:drawablePadding="@dimen/dim_10"
+            android:gravity="left"
+            android:padding="@dimen/dim_5"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dim_5"
+            android:drawablePadding="@dimen/dim_10"
+            android:gravity="left"
+            android:padding="@dimen/dim_5"
+            android:text="To"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/txt_to_location"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dim_5"
+            android:drawableLeft="@drawable/ic_btn_current_location"
+            android:drawablePadding="@dimen/dim_10"
+            android:gravity="left"
+            android:padding="@dimen/dim_5"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10.0dip"
+            android:text="Make Payment for your trip"
+            android:textColor="@color/black"
+            android:textSize="16.0sp" />
+
+        <TextView
+            android:id="@+id/txt_pay_cash"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dim_10"
+            android:layout_marginLeft="@dimen/dim_25"
+            android:layout_marginRight="@dimen/dim_25"
+            android:layout_marginTop="@dimen/dim_10"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:padding="@dimen/dim_10"
+            android:text="Pay Cash"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dim_18"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/dim_5"
+            android:text="OR"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/txt_pay_paytm"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dim_10"
+            android:layout_marginLeft="@dimen/dim_25"
+            android:layout_marginRight="@dimen/dim_25"
+            android:layout_marginTop="@dimen/dim_10"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:padding="@dimen/dim_10"
+            android:text="Pay with Paytm"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dim_18"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/ll_feedback"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/dim_10"
+        android:background="@drawable/rounded_top"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/dim_10"
+                android:text="Feedback"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/dim_20" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1.0px"
+                android:background="@color/colorPrimaryDark" />
+
+            <RelativeLayout
+                android:id="@+id/rl_profile"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_request"
+                android:layout_marginLeft="@dimen/dim_20"
+                android:layout_marginRight="@dimen/dim_20"
+                android:layout_marginTop="@dimen/dim_20">
+
+                <com.pkmmte.view.CircularImageView
+                    android:id="@+id/profile_picture"
+                    android:layout_width="@dimen/dim_80"
+                    android:layout_height="@dimen/dim_80"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dim_3"
+                    android:clickable="false"
+                    android:src="@drawable/seach_list_default_pic"
+                    app:border="true"
+                    app:border_color="@color/colorPrimaryDark"
+                    app:border_width="1.0dip" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_picture"
+                    android:layout_centerHorizontal="true">
+
+                    <TextView
+                        android:id="@+id/txt_user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="Bhavesh Soni"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/dim_16"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_user_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txt_user_name"
+                        android:layout_centerHorizontal="true"
+                        android:drawableLeft="@drawable/rating_star_inactive"
+                        android:drawablePadding="@dimen/dim_10"
+                        android:text="4.5"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/dim_16" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dim_20"
+                android:rating="2.5"
+                android:stepSize="0.5" />
+
+            <TextView
+                android:id="@+id/txt_rating_status"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/dim_10"
+                android:text="Average"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/dim_18" />
+
+            <RadioGroup
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dim_20"
+                    android:checked="false"
+                    android:text="Say Thanks to Floter"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/dim_18" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dim_20"
+                    android:checked="false"
+                    android:text="Not good enought"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/dim_18" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dim_20"
+                    android:checked="false"
+                    android:text="Satisfied Service"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/dim_18" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dim_20"
+                    android:layout_marginLeft="@dimen/dim_20"
+                    android:checked="false"
+                    android:text="Driver was not good"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/dim_18" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_submit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dim_18"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</RelativeLayout>

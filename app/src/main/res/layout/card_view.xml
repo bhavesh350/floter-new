@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_item"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10.0dip"
+    android:layout_marginRight="10.0dip"
+    android:layout_marginTop="10.0dip"
+    card_view:cardBackgroundColor="#ffffffff"
+    card_view:cardCornerRadius="5.0dip">
+
+    <LinearLayout
+        android:id="@+id/cont_card_content"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/vehicle_image"
+            android:layout_width="70.0dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/dim_10"
+            android:scaleType="center" />
+
+        <TextView
+            android:id="@+id/merchant"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10.0dip"
+            android:layout_marginTop="-8.0dip"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/dim_15"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/merchant"
+            android:background="@android:color/transparent"
+            android:paddingLeft="16.0dip"
+            android:text=""
+            android:textAppearance="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/dim_15" />
+
+        <TextView
+            android:id="@+id/ppkm"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timestamp"
+            android:drawableTop="@drawable/back"
+            android:paddingLeft="16.0dip"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/dim_15" />
+
+        <TextView
+            android:id="@+id/ppmin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ppkm"
+            android:drawableTop="@drawable/back"
+            android:paddingLeft="16.0dip"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/dim_15" />
+
+        <TextView
+            android:id="@+id/dimension"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ppmin"
+            android:drawableTop="@drawable/back"
+            android:paddingLeft="16.0dip"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/dim_15" />
+
+        <TextView
+            android:id="@+id/address_merchant"
+            android:layout_width="fill_parent"
+            android:layout_height="50.0dip"
+            android:layout_below="@+id/dimension"
+            android:drawableTop="@drawable/back"
+            android:paddingLeft="16.0dip"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/dim_15" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

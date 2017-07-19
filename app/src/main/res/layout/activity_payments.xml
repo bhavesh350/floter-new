@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="?actionBarSize"
+        android:background="?colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <TextView
+            android:id="@+id/feedhead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Payment"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dim_20"
+            android:typeface="serif" />
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dim_10"
+        android:layout_marginTop="@dimen/dim_15"
+        android:fontFamily="serif"
+        android:padding="@dimen/dim_5"
+        android:text="Payment Methods"
+        android:textSize="@dimen/dim_18"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_paytm"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dim_10"
+        android:layout_marginRight="@dimen/dim_10"
+        android:layout_marginTop="@dimen/dim_5"
+        android:background="@drawable/rounded_corner_search"
+        android:drawableRight="@drawable/ic_paytm"
+        android:fontFamily="serif"
+        android:padding="@dimen/dim_10"
+        android:text="Paytm"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dim_18" />
+
+    <TextView
+        android:id="@+id/txt_cash"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dim_10"
+        android:layout_marginRight="@dimen/dim_10"
+        android:layout_marginTop="@dimen/dim_15"
+        android:background="@drawable/rounded_corner_search"
+        android:drawablePadding="@dimen/dim_15"
+        android:drawableRight="@drawable/ic_cash"
+        android:fontFamily="serif"
+        android:padding="@dimen/dim_10"
+        android:text="Cash"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dim_18" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_marginTop="@dimen/dim_30"
+        android:background="@color/black" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dim_10"
+        android:layout_marginTop="@dimen/dim_15"
+        android:fontFamily="serif"
+        android:padding="@dimen/dim_5"
+        android:text="Promotions"
+        android:textSize="@dimen/dim_18"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dim_10"
+        android:layout_marginTop="@dimen/dim_15"
+        android:fontFamily="serif"
+        android:padding="@dimen/dim_5"
+        android:text="Complete 3 Rides a day and avail a offer"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dim_15" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dim_10"
+            android:layout_marginTop="@dimen/dim_15"
+            android:fontFamily="serif"
+            android:padding="@dimen/dim_5"
+            android:text="Today's Rides"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dim_15" />
+
+        <TextView
+            android:id="@+id/txt_ride_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dim_10"
+            android:layout_marginTop="@dimen/dim_15"
+            android:fontFamily="serif"
+            android:padding="@dimen/dim_5"
+            android:text="0"
+            android:textColor="@color/colorGrayDark"
+            android:textSize="@dimen/dim_18"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="@dimen/dim_30"
+            android:layout_height="@dimen/dim_30"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dim_5"
+            android:fontFamily="serif"
+            android:text="0" />
+    </RelativeLayout>
+</LinearLayout>

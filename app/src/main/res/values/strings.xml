@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">Floter</string>
+    <string name="timeout">Timeout occurred, Check your internet connection</string>
+    <string name="something_wrong">Error occurred with code</string>
+
+    <string name="drawer_open">openDrawer</string>
+    <string name="drawer_close">closeDrawer</string>
+
+    <string name="facebook_app_id">689966794516400</string>
+    <string name="loading">Please wait...</string>
+    <string name="alert">Alert!</string>
+    <string name="connect_working_internet">Please connect to working internet connection</string>
+    <string name="fb_login_protocol_scheme">fb689966794516400</string>
+    <string name="latitude_label">Latitude:</string>
+    <string name="longitude_label">Longitude:</string>
+    <string name="latitude_label_D">Destination Latitude:</string>
+    <string name="longitude_label_D">Destination Longitude:</string>
+    <string name="last_update_time_label">Last updated time:</string>
+    <string name="location_updated_message">Location Updated.</string>
+    <string name="no_geocoder_available">No geocoder available</string>
+    <string name="fetch_address">Fetch address</string>
+    <string name="address_found">Address found</string>
+    <string name="no_address_found">Sorry, no address found</string>
+    <string name="no_location_data_provided">No location data provided</string>
+    <string name="service_not_available">Sorry, the service is not available</string>
+    <string name="invalid_lat_long_used">Invalid latitude or longitude used</string>
+
+    <string-array name="nav_drawer_labels">
+        <item>Track live trips</item>
+        <item>Your trips</item>
+        <!--<item>Book for days</item>-->
+        <item>Rate card</item>
+        <item>Payment</item>
+        <item>Offers</item>
+        <item>Share</item>
+        <item>Support</item>
+        <item>About us</item>
+    </string-array>
+
+    <string name="who">\nFLOTER Cargo Cab Service is a technology based approach in logistic sector that helps in making intra-city pickup and deliveries with more transparency and reliability. We FLOTER help the customer to find their Cargo Cab more easily without any hassle. We aims at keeping the market organised.
+We have a varied category of vehicles an our platform starting from Piaggio three wheeler, Tata ace, Tata super ace, Ashok Leyland dost to Bolero pick up across ODISHA.</string>
+
+
+
+    <string name="our_services"><b>Our Services Include :-</b></string>
+    <string name="why">\n<b>OUR SOLUTIONS</b>\n
+        \nReal time tracking Customers needn’t require to keep calling the driver to know his location, especially for quick deliveries. Track the vehicle using our tracking option in the app and be tension free.
+</string>
+
+    <string name="our">\n<b>Transparent Pricing :</b>\n \n  Due to un-organisation in the market, there is no fixed price as it is largely due to freak of the driver. So we allow you enjoy economical and transparent pricing. Trust on us to help you ensure consistent, seamless consumer experiences at the lowest cost.".</string>
+
+    <string name="verified">\n<b>Verified Drivers Assigned :</b>\n \n
+We select our drivers through comprehensive process and through background check. Our drivers will provide you better service and will help you in anyway possible.".</string>
+
+    <string name="management">\n<b>Management System :</b>\n \n
+We aims at serving you best management system which includes tools for Live tracking , Periodic SMS/email alerts, payment history , total trips , point to point billing and Client specific customization.".</string>
+    <string name="phone">Enter receiver contact</string>
+    <string name="cancel">Cancel</string>
+    <string name="accept">Accept</string>
+</resources>

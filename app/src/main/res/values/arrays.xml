@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<resources>
+
+    <array name="minusIcons">
+        <item>@drawable/icon_track_live_trips</item>
+        <item>@drawable/icon_your_trips</item>
+        <!--<item>@drawable/icon_your_trips</item>-->
+        <item>@drawable/icon_rate_card</item>
+        <item>@drawable/icon_payment</item>
+        <item>@drawable/icon_offers</item>
+        <item>@drawable/ic_action_name</item>
+        <item>@drawable/icon_support</item>
+        <item>@drawable/about_us</item>
+    </array>
+
+    <array name="truckIcons">
+        <item>@drawable/truck_piaggio_white</item>
+        <item>@drawable/truck_tata_ace_inactive</item>
+        <item>@drawable/truck_super_ace_inactive</item>
+        <item>@drawable/truck_ashok_white</item>
+        <item>@drawable/truck_bolero_white</item>
+        <item>@drawable/truck_tata_inactive</item>
+    </array>
+
+    <array name="truckIconsActive">
+        <item>@drawable/truck_piaggio_active</item>
+        <item>@drawable/truck_tata_ace_active</item>
+        <item>@drawable/truck_super_ace_active</item>
+        <item>@drawable/truck_ashok_active</item>
+        <item>@drawable/truck_bolero_active</item>
+        <item>@drawable/truck_tata_active</item>
+    </array>
+
+
+    <string-array name="truck_names">
+        <item>Piaggio\nApe</item>
+        <item>Tata\nAce</item>
+        <item>Tata Super\nAce</item>
+        <item>Ashok Leland\nDost</item>
+        <item>Bolero Pick-up</item>
+        <item>Tata\n407</item>
+    </string-array>
+    <string-array name="values">
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+    </string-array>
+</resources>
