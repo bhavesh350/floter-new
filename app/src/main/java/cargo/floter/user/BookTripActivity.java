@@ -381,7 +381,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
                 p.put("trip_status", TripStatus.Pending.name());
             }
             p.put("trip_validity", "Present");
-            postCall(getContext(), "http://stubuz.com/floterapi/index.php/tripapi/save?", p, "Please wait...", 2);
+            postCall(getContext(), "http://floter.in/floterapi/index.php/tripapi/save?", p, "Please wait...", 2);
         }
     }
 
@@ -503,13 +503,16 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
                 p.put("object", jo.toString());
                 AsyncHttpClient client = new AsyncHttpClient();
                 client.setTimeout(30000);
-                client.post("http://stubuz.com/floterapi/push/DriverPushNotification?", p, new C10927());
+                client.post("http://floter.in/floterapi/push/DriverPushNotification?", p, new C10927());
             } else {
                 loader.stopProgress();
                 MyApp.popMessageAndFinish("Alert!", "It seems that no driver is able to connect right now," +
                         " please try again after sometime.\nThank you.", BookTripActivity.this);
             }
         } catch (Exception e) {
+            loader.stopProgress();
+            MyApp.popMessageAndFinish("Alert!", "It seems that no driver is able to connect right now," +
+                    " please try again after sometime.\nThank you.", BookTripActivity.this);
         }
     }
 

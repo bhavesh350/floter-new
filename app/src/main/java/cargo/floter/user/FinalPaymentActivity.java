@@ -133,7 +133,7 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
         public void onTransactionResponse(Bundle inResponse) {
             Log.d("LOG", "Payment Transaction : " + inResponse);
             MyApp.spinnerStart(FinalPaymentActivity.this.getContext(), "Please wait...");
-            String url = "http://stubuz.com/floterapi/paytm/getTransactionStatus.php";
+            String url = "http://floter.in/floterapi/paytm/getTransactionStatus.php";
             RequestParams p = new RequestParams();
             p.put(PaytmConstants.MERCHANT_ID, "FLOTER55912639344993");
             p.put("ORDER_ID", FinalPaymentActivity.this.orderId);
@@ -387,7 +387,7 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
         p.put("object", "\"{\"json\":\"json\"}\"");
         p.put("android", currentTrip.getDriver().getD_device_token());
         client.setTimeout(30000);
-        client.post("http://stubuz.com/floterapi/push/DriverPushNotification?", p, new JsonHttpResponseHandler() {
+        client.post("http://floter.in/floterapi/push/DriverPushNotification?", p, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, String response) {
                 Log.d("Response:", response.toString());
             }
@@ -436,7 +436,7 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
 
     private void createPay(String orderId, String payment) {
         MyApp.spinnerStart(getContext(), "Please wait...");
-        String url = "http://stubuz.com/floterapi/paytm/generateChecksum.php";
+        String url = "http://floter.in/floterapi/paytm/generateChecksum.php";
         RequestParams p = new RequestParams();
         p.put(PaytmConstants.MERCHANT_ID, "FLOTER55912639344993");
         p.put("ORDER_ID", orderId);

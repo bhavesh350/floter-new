@@ -117,7 +117,7 @@ public class PaymentActivity extends CustomActivity implements ResponseCallback 
         public void onTransactionResponse(Bundle inResponse) {
             Log.d("LOG", "Payment Transaction : " + inResponse);
             MyApp.spinnerStart(PaymentActivity.this, "Please wait...");
-            String url = "http://stubuz.com/floterapi/paytm/getTransactionStatus.php";
+            String url = "http://floter.in/floterapi/paytm/getTransactionStatus.php";
             RequestParams p = new RequestParams();
             p.put(PaytmConstants.MERCHANT_ID, "FLOTER55912639344993");
             p.put("ORDER_ID", "ORD1111");
@@ -284,7 +284,7 @@ public class PaymentActivity extends CustomActivity implements ResponseCallback 
 
 //    private void createPay() {
 //        MyApp.spinnerStart(this, "Please wait...");
-//        String url = "http://stubuz.com/floterapi/paytm/generateChecksum.php";
+//        String url = "http://floter.in/floterapi/paytm/generateChecksum.php";
 //        RequestParams p = new RequestParams();
 //        p.put(PaytmConstants.MERCHANT_ID, "FLOTER55912639344993");
 //        p.put("ORDER_ID", "ORD1111");

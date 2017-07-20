@@ -23,9 +23,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -66,6 +66,22 @@ import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUp.Builder;
 import com.mancj.slideup.SlideUp.Listener;
 import com.mancj.slideup.SlideUp.State;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
 import cargo.floter.user.CustomActivity.ResponseCallback;
 import cargo.floter.user.application.MyApp;
 import cargo.floter.user.application.SingleInstance;
@@ -83,23 +99,7 @@ import cargo.floter.user.utils.HorizontalPicker.OnItemSelected;
 import cargo.floter.user.utils.LocationProvider;
 import cargo.floter.user.utils.LocationProvider.LocationCallback;
 import cargo.floter.user.utils.LocationProvider.PermissionCallback;
-
 import cz.msebera.android.httpclient.protocol.HTTP;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class MainActivity extends CustomActivity implements ResponseCallback, FragmentDrawerListener, OnMapReadyCallback, OnCameraIdleListener, OnItemSelected, OnItemClicked, OnConnectionFailedListener, LocationCallback, PermissionCallback {
     protected static final String TAG = "MainActivity";
@@ -458,6 +458,28 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         this.click_truck.setOnClickListener(new C05724());
         this.ll_info.setOnClickListener(new C05735());
         new Handler().postDelayed(new C05746(), 10000);
+
+        if (MyApp.getStatus(AppConstants.FIRST_OFFER)) {
+            showFirstOfferDialog();
+        }
+    }
+
+    private void showFirstOfferDialog() {
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.dialog_offer);
+        dialog.setCancelable(false);
+        TextView txt_pay = (TextView) dialog.findViewById(R.id.txt_pay);
+
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = -1;
+        lp.height = -2;
+        dialog.getWindow().setAttributes(lp);
+        dialog.show();
     }
 
 //    private void showPaymentDialog() {

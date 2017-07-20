@@ -66,7 +66,7 @@ public class VerifyPhoneNumberActivity extends CustomActivity implements CustomA
     }
 
     private void verifyOtp(String otp) {
-//        http://stubuz.com/floterapi/index.php/userapi/verifyotp?
+//        http://floter.in/floterapi/index.php/userapi/verifyotp?
 // u_mobile=9015660024&otp=458954&detail=442aa50d-2041-11e7-929b-00163ef91450
         RequestParams p = new RequestParams();
         p.put("u_mobile", getIntent().getStringExtra(AppConstants.EXTRA_1));

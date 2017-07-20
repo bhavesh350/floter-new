@@ -506,7 +506,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
         } else if (v == this.share_trip) {
             Intent sendIntent = new Intent();
             sendIntent.setAction("android.intent.action.SEND");
-            sendIntent.putExtra("android.intent.extra.TEXT", "I am using " + getString(R.string.app_name) + " for my goods transport. You can track goods with the following link\nhttp://stubuz.com/floterweb/tracking/triptrack.php?trip_id=" + this.tripId);
+            sendIntent.putExtra("android.intent.extra.TEXT", "I am using " + getString(R.string.app_name) + " for my goods transport. You can track goods with the following link\nhttp://floter.in/tracking/triptrack.php?trip_id=" + this.tripId);
             sendIntent.putExtra("android.intent.extra.SUBJECT", getString(R.string.app_name) + " App !");
             sendIntent.setType(HTTP.PLAIN_TEXT_TYPE);
             startActivity(Intent.createChooser(sendIntent, getString(R.string.messenger_send_button_text)));
@@ -901,7 +901,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
         p.put("object", "\"{\"json\":\"json\"}\"");
         p.put("android", this.currentTrip.getDriver().getD_device_token());
         client.setTimeout(30000);
-        client.post("http://stubuz.com/floterapi/push/DriverPushNotification?", p, new JsonHttpResponseHandler() {
+        client.post("http://floter.in/floterapi/push/DriverPushNotification?", p, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, String response) {
                 Log.d("Response:", response.toString());
             }
@@ -915,7 +915,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
 
     private void createPay(String orderId, String payment) {
         MyApp.spinnerStart(getContext(), "Please wait...");
-        String url = "http://stubuz.com/floterapi/paytm/generateChecksum.php";
+        String url = "http://floter.in/floterapi/paytm/generateChecksum.php";
         RequestParams p = new RequestParams();
         p.put(PaytmConstants.MERCHANT_ID, "FLOTER55912639344993");
         p.put("ORDER_ID", orderId);
@@ -1100,7 +1100,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
             public void onTransactionResponse(Bundle inResponse) {
                 Log.d("LOG", "Payment Transaction : " + inResponse);
                 MyApp.spinnerStart(OnTripActivity.this.getContext(), "Please wait...");
-                String url = "http://stubuz.com/floterapi/paytm/getTransactionStatus.php";
+                String url = "http://floter.in/floterapi/paytm/getTransactionStatus.php";
                 RequestParams p = new RequestParams();
                 p.put(PaytmConstants.MERCHANT_ID, "FLOTER55912639344993");
                 p.put("ORDER_ID", OnTripActivity.this.orderId);

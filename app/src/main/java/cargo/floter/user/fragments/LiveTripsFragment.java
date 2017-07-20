@@ -459,7 +459,7 @@ public class LiveTripsFragment extends CustomFragment implements ResponseCallbac
         } else if (v == this.share_trip) {
             Intent sendIntent = new Intent();
             sendIntent.setAction("android.intent.action.SEND");
-            sendIntent.putExtra("android.intent.extra.TEXT", "I am using " + getString(R.string.app_name) + " for my goods transport. You can track goods with the following link\nhttp://stubuz.com/floterweb/tracking/triptrack.php?trip_id=" + this.tripId);
+            sendIntent.putExtra("android.intent.extra.TEXT", "I am using " + getString(R.string.app_name) + " for my goods transport. You can track goods with the following link\nhttp://floter.in/floterweb/tracking/triptrack.php?trip_id=" + this.tripId);
             sendIntent.putExtra("android.intent.extra.SUBJECT", getString(R.string.app_name) + " App !");
             sendIntent.setType(HTTP.PLAIN_TEXT_TYPE);
             startActivity(Intent.createChooser(sendIntent, getString(R.string.messenger_send_button_text)));

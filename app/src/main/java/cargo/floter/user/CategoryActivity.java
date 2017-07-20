@@ -54,9 +54,9 @@ public class CategoryActivity extends CustomActivity implements CustomActivity.R
 
     private void loadCategory() {
         RequestParams p = new RequestParams();
-       /* http://stubuz.com/floterapi/index.php/goodstypeapi/getgoodstypes?api_key=ee059a1e2596c265fd61c44f1855875e*/
+       /* http://floter.in/floterapi/index.php/goodstypeapi/getgoodstypes?api_key=ee059a1e2596c265fd61c44f1855875e*/
         p.put("api_key", "ee059a1e2596c265fd61c44f1855875e");
-        postCall(this, "http://stubuz.com/floterapi/index.php/goodstypeapi/getgoodstypes?", p, "Please Wait...", 1);
+        postCall(this, "http://floter.in/floterapi/index.php/goodstypeapi/getgoodstypes?", p, "Please Wait...", 1);
 
     }
 

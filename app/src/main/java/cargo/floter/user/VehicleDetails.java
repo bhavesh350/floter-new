@@ -49,7 +49,7 @@ public class VehicleDetails extends CustomActivity implements ResponseCallback {
     }
 
     private void loadRateCard() {
-        normalPostCall(this, "http://stubuz.com/floterapi/index.php/carapi/getratecard", "Getting RateCards...", 1);
+        normalPostCall(this, "http://floter.in/floterapi/index.php/carapi/getratecard", "Getting RateCards...", 1);
     }
 
     public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {

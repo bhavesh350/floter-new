@@ -26,20 +26,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
-import cargo.floter.user.application.MyApp;
-import cargo.floter.user.model.User;
-import cargo.floter.user.utils.AppConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+
+import cargo.floter.user.application.MyApp;
+import cargo.floter.user.model.User;
+import cargo.floter.user.utils.AppConstants;
 
 public class RegisterActivity extends CustomActivity implements CustomActivity.ResponseCallback, GoogleApiClient.OnConnectionFailedListener {
 
@@ -164,7 +164,7 @@ public class RegisterActivity extends CustomActivity implements CustomActivity.R
     }
 
     private void registerUser(String email, String firstName, String lastName) {
-//        http://stubuz.com/floterapi/index.php/userapi/registration?u_fname=pawan&u_lname=yadav&u_email=testyd@gmail.com
+//        http://floter.in/floterapi/index.php/userapi/registration?u_fname=pawan&u_lname=yadav&u_email=testyd@gmail.com
         RequestParams p = new RequestParams();
         p.put("u_fname", firstName);
         p.put("u_lname", lastName);
@@ -271,6 +271,7 @@ public class RegisterActivity extends CustomActivity implements CustomActivity.R
             try {
                 User u = new Gson().fromJson(o.getJSONObject("response").toString(), User.class);
                 MyApp.getApplication().writeUser(u);
+                MyApp.setStatus(AppConstants.FIRST_OFFER, true);
                 startActivity(new Intent(getContext(), MainActivity.class));
                 MyApp.setStatus(AppConstants.IS_LOGIN, true);
                 finishAffinity();

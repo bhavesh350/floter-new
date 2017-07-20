@@ -87,7 +87,7 @@ public class HistoryAdapter extends Adapter<HistoryAdapter.Holder> {
         if (TextUtils.isEmpty(holder.txt_status.getText().toString())) {
             holder.txt_status.setText(AnalyticsEvents.PARAMETER_DIALOG_OUTCOME_VALUE_UNKNOWN);
         }
-        holder.txt_date_time.setText(t.getTrip_modified());
+        holder.txt_date_time.setText(MyApp.convertTime(t.getTrip_modified()));
         holder.txt_from.setText("From:" + t.getTrip_from_loc());
         holder.txt_to.setText("To:" + t.getTrip_to_loc());
         if (position > this.previousPosition) {

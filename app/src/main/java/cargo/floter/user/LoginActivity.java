@@ -89,7 +89,7 @@ public class LoginActivity extends CustomActivity implements CustomActivity.Resp
                 edt_phone.setError("Enter a valid phone number");
                 return;
             }
-//            http://stubuz.com/floterapi/index.php/userapi/sendotp?u_mobile=9643964785
+//            http://floter.in/floterapi/index.php/userapi/sendotp?u_mobile=9643964785
             RequestParams p = new RequestParams();
             p.put("u_mobile", edt_phone.getText().toString());
             postCall(getContext(), AppConstants.BASE_URL + AppConstants.SEND_OTP, p, "Please wait...", 1);

@@ -53,13 +53,10 @@ public class WebActivity extends CustomActivity {
 //        settings.setJavaScriptEnabled(true);
 //        webview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         if (getIntent().getIntExtra(AppConstants.EXTRA_2, 0) == 1) {
-            loadUrlInWebView("http://stubuz.com/floterweb/privacy-policy.html");
+            loadUrlInWebView("http://floter.in/term_of_service.html");
         } else {
-            loadUrlInWebView("http://stubuz.com/floterweb/about-us.html");
+            loadUrlInWebView("http://floter.in/about-us.html");
         }
-
-
-
     }
 
     private void loadUrlInWebView(String webUrl) {

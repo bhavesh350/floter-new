@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -408,6 +409,26 @@ public class MyApp extends Application {
             return false;
     }
 
+    public static String convertTime(String date) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            cal.setTime(sdf.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+//Will print in UTC
+//        System.out.println(sdf.format(cal.getTime()));
+
+//Here you set to your timezone
+        sdf.setTimeZone(TimeZone.getDefault());
+//Will print on your default Timezone
+//        System.out.println(sdf.format(cal.getTime()));
+        return sdf.format(cal.getTime());
+    }
     public static String millsToDate(long mills) {
 
         Date d = new Date(mills);
@@ -419,7 +440,7 @@ public class MyApp extends Application {
         return new SimpleDateFormat("yyyy-MM-dd").format(new Date(mills));
     }
     public static String millsToDateTime(long mills) {
-        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date(mills));
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(mills));
     }
     public static String millsToTime(long mills) {
 

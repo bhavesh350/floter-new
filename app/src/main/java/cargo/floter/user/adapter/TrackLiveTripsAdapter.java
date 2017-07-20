@@ -11,6 +11,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.List;
+
 import cargo.floter.user.OnTripActivity;
 import cargo.floter.user.R;
 import cargo.floter.user.application.MyApp;
@@ -18,9 +21,6 @@ import cargo.floter.user.model.Trip;
 import cargo.floter.user.model.TripStatus;
 import cargo.floter.user.utils.AppConstants;
 import cargo.floter.user.utils.MyAnimationUtils;
-
-import java.util.HashMap;
-import java.util.List;
 
 public class TrackLiveTripsAdapter extends Adapter<TrackLiveTripsAdapter.Holder> {
     private List<Trip> list;
@@ -72,13 +72,13 @@ public class TrackLiveTripsAdapter extends Adapter<TrackLiveTripsAdapter.Holder>
         if (TextUtils.isEmpty(holder.txt_status.getText().toString())) {
             holder.txt_status.setText("Unknown");
         }
-        holder.txt_date_time.setText(t.getTrip_modified());
+        holder.txt_date_time.setText(MyApp.convertTime(t.getTrip_modified()));
         holder.txt_from.setText("From:" + t.getTrip_from_loc());
         holder.txt_to.setText("To:" + t.getTrip_to_loc());
         try {
             holder.txt_time.setText(t.getTrip_pickup_time().split(" ")[1]);
         } catch (Exception e) {
-            holder.txt_time.setText(t.getTrip_modified().split(" ")[1].substring(0, 5));
+            holder.txt_time.setText(MyApp.convertTime(t.getTrip_modified()).split(" ")[1].substring(0, 5));
         }
         if (position > this.previousPosition) {
             MyAnimationUtils.animate(holder, true);

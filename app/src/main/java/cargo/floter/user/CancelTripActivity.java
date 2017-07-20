@@ -101,7 +101,7 @@ public class CancelTripActivity extends CustomActivity implements ResponseCallba
                 p.put("object", "\"{\"json\":\"json\"}\"");
                 p.put("android", this.deviceToken);
                 client.setTimeout(30000);
-                client.post("http://stubuz.com/floterapi/push/DriverPushNotification?", p, new C10931());
+                client.post("http://floter.in/floterapi/push/DriverPushNotification?", p, new C10931());
                 HashMap<String, Trip> trips = MyApp.getApplication().readTrip();
                 if (trips.containsKey(this.tripId)) {
                     trips.remove(this.tripId);

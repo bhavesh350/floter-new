@@ -6,9 +6,9 @@ package cargo.floter.user.utils;
 
 public class AppConstants {
 
-    public static String BASE_PAYMENT = "http://stubuz.com/floterapi/index.php/paymentapi/getpayments?";
-    public static String BASE_URL = "http://stubuz.com/floterapi/index.php/userapi/";
-    public static String BASE_URL_TRIP = "http://stubuz.com/floterapi/index.php/tripapi/";
+    public static String BASE_PAYMENT = "http://floter.in/floterapi/index.php/paymentapi/getpayments?";
+    public static String BASE_URL = "http://floter.in/floterapi/index.php/userapi/";
+    public static String BASE_URL_TRIP = "http://floter.in/floterapi/index.php/tripapi/";
     public static String DEVICE_TOKEN = "deviceToken";
     public static String EMAIL = "email";
     public static String EXTRA_1 = "extra1";
@@ -21,5 +21,7 @@ public class AppConstants {
     public static String SEND_OTP = "sendotp?";
     public static final float SERVICE_TAX = 0.0f;
     public static String VERIFY_OTP = "verifyotp?";
+    public static String FIRST_OFFER = "fistOffer";
+
 
 }

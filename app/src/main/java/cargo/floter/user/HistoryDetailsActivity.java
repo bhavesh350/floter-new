@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
+import cargo.floter.user.application.MyApp;
 import cargo.floter.user.application.SingleInstance;
 import cargo.floter.user.model.Trip;
 
@@ -44,7 +45,7 @@ public class HistoryDetailsActivity extends CustomActivity {
         total = (TextView) findViewById(R.id.total);
 
         Trip t = SingleInstance.getInstance().getHistoryTrip();
-        txt_date_time.setText(t.getTrip_modified().replace(" ", " at "));
+        txt_date_time.setText(MyApp.convertTime(t.getTrip_modified()).replace(" ", " at "));
         txt_cost.setText("Rs. " + t.getTrip_pay_amount());
         txt_truck_type.setText(t.getDriver().getCar_name());
         payment_mode.setText(t.getTrip_pay_mode());

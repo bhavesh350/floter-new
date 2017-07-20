@@ -49,7 +49,7 @@ public class SplashActivity extends CustomActivity {
     private void getApiData() {
         AsyncHttpClient client = new AsyncHttpClient();
         client.setTimeout(30000);
-        client.post("http://stubuz.com/floterapi/index.php/carapi/getratecard", new JsonHttpResponseHandler() {
+        client.post("http://floter.in/floterapi/index.php/carapi/getratecard", new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, final JSONObject o) {
