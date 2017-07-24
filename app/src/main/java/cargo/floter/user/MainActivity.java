@@ -476,8 +476,8 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
-        lp.width = -1;
-        lp.height = -2;
+        lp.width = lp.MATCH_PARENT;
+        lp.height = lp.WRAP_CONTENT;
         dialog.getWindow().setAttributes(lp);
         dialog.show();
     }
