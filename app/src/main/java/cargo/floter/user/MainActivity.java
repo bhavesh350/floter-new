@@ -25,9 +25,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -626,9 +624,9 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         if (!MyApp.isLocationEnabled(getContext())) {
             enableGPS();
         }
-        if (this.sourceLocation != null && this.isFirstSet) {
-            getNearbyDrivers(this.sourceLocation.latitude + "", this.sourceLocation.longitude + "");
-        }
+//        if (this.sourceLocation != null && this.isFirstSet) {
+//            getNearbyDrivers(this.sourceLocation.latitude + "", this.sourceLocation.longitude + "");
+//        }
         if (MyApp.getSharedPrefString("SHOW_PAY").equals("YES")) {
             startActivity(new Intent(getContext(), FinalPaymentActivity.class));
         }
@@ -687,9 +685,15 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                     place = SingleInstance.getInstance().getSelectedPlace();
                     this.sourceLocation = place.getLatLng();
                     Log.i("", "Place: " + place.getName());
-                    this.mLocationText.setText(place.getAddress().toString().replace("\n", " "));
-                    this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder().target(place.getLatLng()).zoom(15.5f).tilt(0.0f).build()));
-                    getNearbyDrivers(place.getLatLng().latitude + "", place.getLatLng().longitude + "");
+                    if (place.getAddress().toString().contains("Odisha") || place.getAddress().toString().contains("Delhi")) {
+                        this.mLocationText.setText(place.getAddress().toString().replace("\n", " "));
+                        this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder().target(place.getLatLng()).zoom(15.5f).tilt(0.0f).build()));
+                        getNearbyDrivers(place.getLatLng().latitude + "", place.getLatLng().longitude + "");
+                    } else {
+                        MyApp.popMessage("Alert!", "Service is not available in your area.\nThis application is restricted to Odisha state only.\nThank you", getContext());
+                    }
+
+
                     return;
                 } else if (resultCode != 2) {
                     return;
@@ -702,9 +706,13 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                     Log.i("", "Place: " + place.getAddress());
                     this.destinationLocation = place.getLatLng();
                     this.destinationString = place.getAddress().toString();
-                    String url = getMapsApiDirectionsUrl(new LatLng(this.sourceLocation.latitude, this.sourceLocation.longitude), new LatLng(this.destinationLocation.latitude, this.destinationLocation.longitude));
-                    new ReadTask().execute(new String[]{url});
-                    MyApp.spinnerStart(getContext(), "Please wait...");
+                    if (place.getAddress().toString().contains("Odisha") || place.getAddress().toString().contains("Delhi")) {
+                        String url = getMapsApiDirectionsUrl(new LatLng(this.sourceLocation.latitude, this.sourceLocation.longitude), new LatLng(this.destinationLocation.latitude, this.destinationLocation.longitude));
+                        new ReadTask().execute(new String[]{url});
+                        MyApp.spinnerStart(getContext(), "Please wait...");
+                    } else {
+                        MyApp.popMessage("Alert!", "Service is not available in your area.\nThis application is restricted to Odisha state only.\nThank you", getContext());
+                    }
                     return;
                 } else if (resultCode == 2) {
                     Log.i("", PlaceAutocomplete.getStatus(this, data).getStatusMessage());
@@ -870,15 +878,22 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         try {
             List<Address> addresses = new Geocoder(this, Locale.getDefault()).getFromLocation(LATITUDE, LONGITUDE, 1);
             if (addresses != null) {
-                Address returnedAddress = (Address) addresses.get(0);
+                Address returnedAddress = addresses.get(0);
                 StringBuilder strReturnedAddress = new StringBuilder("");
                 for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
                     strReturnedAddress.append(returnedAddress.getAddressLine(i)).append(", ");
                 }
                 strAdd = strReturnedAddress.toString();
-                this.mLocationText.setText(strReturnedAddress.toString());
-                Log.w("address", "" + strReturnedAddress.toString());
-                return strAdd;
+                if (returnedAddress.getAdminArea().equals("Odisha") || returnedAddress.getAdminArea().equals("Delhi")) {
+                    this.mLocationText.setText(strReturnedAddress.toString());
+                    Log.w("address", "" + strReturnedAddress.toString());
+                    return strAdd;
+                } else {
+                    strAdd = "";
+                    MyApp.popMessage("Alert!", "Service is not available in your area.\nThis application is restricted to Odisha state only.\nThank you", getContext());
+                    return strAdd;
+                }
+
             }
             Log.w("address", "No Address returned!");
             return strAdd;
@@ -988,10 +1003,14 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         if (o.optString("status").equals("OK")) {
             this.driversMap = new HashMap();
             NearbyDrivers nd = new Gson().fromJson(o.toString(), NearbyDrivers.class);
+            if (nd.getResponse().size() == 0) {
+                MyApp.popMessage("Message", "No driver available in your area, please try after some time.", getContext());
+                return;
+            }
             for (int i = 0; i < nd.getResponse().size(); i++) {
                 List<Response> list;
                 if (this.driversMap.containsKey((nd.getResponse().get(i)).getCar_name())) {
-                    list = (List) this.driversMap.get(((Response) nd.getResponse().get(i)).getCar_name());
+                    list = (List) this.driversMap.get((nd.getResponse().get(i)).getCar_name());
                     list.add(nd.getResponse().get(i));
                     this.driversMap.put((nd.getResponse().get(i)).getCar_name(), list);
                 } else {
