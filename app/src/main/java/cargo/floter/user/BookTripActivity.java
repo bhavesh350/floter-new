@@ -30,13 +30,22 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
 import cargo.floter.user.CustomActivity.ResponseCallback;
 import cargo.floter.user.application.MyApp;
 import cargo.floter.user.application.SingleInstance;
@@ -49,16 +58,6 @@ import cargo.floter.user.model.User;
 import cargo.floter.user.utils.AppConstants;
 import cargo.floter.user.utils.ContactsEditText;
 import cargo.floter.user.utils.ContactsEditText.Contact;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
 import cz.msebera.android.httpclient.Header;
 import id.arieridwan.lib.PageLoader;
 
@@ -159,12 +158,15 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
                 BookTripActivity.this.loader.stopProgress();
                 BookTripActivity.this.loader.setVisibility(View.VISIBLE);
                 HashMap<String, Trip> allTrips = MyApp.getApplication().readTrip();
-                Trip tt = (Trip) allTrips.get(BookTripActivity.this.tripId);
+                Trip tt = allTrips.get(BookTripActivity.this.tripId);
                 tt.setTrip_status(TripStatus.Accepted.name());
                 allTrips.put(BookTripActivity.this.tripId, tt);
                 MyApp.getApplication().writeTrip(allTrips);
                 MyApp.setSharedPrefString("HIDE_DRIVERS", tt.getDriver_id() + ",");
                 MyApp.setStatus("IS_ON_TRIP", false);
+                if (MyApp.getStatus(AppConstants.FIRST_OFFER)) {
+                    MyApp.setStatus(AppConstants.FIRST_OFFER, false);
+                }
                 BookTripActivity.this.startActivity(new Intent(BookTripActivity.this.getContext(), OnTripActivity.class).putExtra(AppConstants.EXTRA_1, BookTripActivity.this.tripId));
                 BookTripActivity.this.finish();
             } else if (intent.getStringExtra("TYPE").equals("TRIP_DECLINED")) {
@@ -186,7 +188,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
         @Override
         public void run() {
             {
-                if (BookTripActivity.this.driversIterator.hasNext() && !BookTripActivity.this.isDriverSearched) {
+                if (!BookTripActivity.this.isDriverSearched) {
                     BookTripActivity.this.driverRequestMethod();
                 }
             }
@@ -201,7 +203,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
             }
 
             public void run() {
-                if (BookTripActivity.this.driversIterator.hasNext() && !BookTripActivity.this.isDriverSearched) {
+                if (!BookTripActivity.this.isDriverSearched) {
                     BookTripActivity.this.driverRequestMethod();
                 }
             }
@@ -369,11 +371,15 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
             }
             p.put("promo_id", "");
             p.put("trip_promo_code", "");
-            p.put("trip_promo_amt", AppEventsConstants.EVENT_PARAM_VALUE_NO);
+            p.put("trip_promo_amt", "0");
             if (this.isCouponValid) {
                 p.put("promo_id", "5");
                 p.put("trip_promo_code", "FLOTER05");
-                p.put("trip_promo_amt", AppEventsConstants.EVENT_PARAM_VALUE_NO);
+                p.put("trip_promo_amt", 5);
+            } else if (MyApp.getStatus(AppConstants.FIRST_OFFER)) {
+                p.put("promo_id", "6");
+                p.put("trip_promo_code", "FIRST50");
+                p.put("trip_promo_amt", "50");
             }
             if (getIntent().getBooleanExtra("isBookLater", false)) {
                 p.put("trip_status", TripStatus.Upcoming.name());
@@ -500,14 +506,24 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
                 jo.put("dest_address", this.txt_destination.getText().toString());
                 jo.put("source_address", this.txt_source.getText().toString());
                 jo.put("u_rating", "4.0");
+                jo.put("timestamp", System.currentTimeMillis());
                 p.put("object", jo.toString());
                 AsyncHttpClient client = new AsyncHttpClient();
                 client.setTimeout(30000);
                 client.post("http://floter.in/floterapi/push/DriverPushNotification?", p, new C10927());
             } else {
-                loader.stopProgress();
-                MyApp.popMessageAndFinish("Alert!", "It seems that no driver is able to connect right now," +
-                        " please try again after sometime.\nThank you.", BookTripActivity.this);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isDriverSearched) {
+                            loader.stopProgress();
+                            MyApp.popMessageAndFinish("Alert!", "It seems that no driver is able to connect right now," +
+                                    " please try again after sometime.\nThank you.", BookTripActivity.this);
+                        }
+
+                    }
+                }, 15000);
+
             }
         } catch (Exception e) {
             loader.stopProgress();
@@ -527,6 +543,10 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
                 tt.setTrip_status(TripStatus.Accepted.name());
                 allTrips.put(this.tripId, tt);
                 MyApp.getApplication().writeTrip(allTrips);
+                if (MyApp.getStatus(AppConstants.FIRST_OFFER)) {
+                    MyApp.setStatus(AppConstants.FIRST_OFFER, false);
+                }
+                isDriverSearched = true;
                 startActivity(new Intent(getContext(), OnTripActivity.class).putExtra(AppConstants.EXTRA_1, this.tripId));
                 finish();
             } catch (Exception e) {

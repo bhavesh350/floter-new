@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:layout_marginLeft="@dimen/dim_30"
+    android:layout_marginRight="@dimen/dim_30"
+    android:background="@drawable/rounded_corner_search">
 
 
     <LinearLayout
@@ -30,14 +32,14 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/txt_pay"
+            android:id="@+id/txt_ok"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dim_20"
             android:background="@color/colorPrimary"
             android:gravity="center"
             android:padding="@dimen/dim_10"
-            android:text="Pay"
+            android:text="Ok"
             android:textColor="@color/white"
             android:textSize="@dimen/dim_20"
             android:textStyle="bold" />

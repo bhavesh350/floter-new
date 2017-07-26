@@ -469,8 +469,15 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setContentView(R.layout.dialog_offer);
         dialog.setCancelable(false);
-        TextView txt_pay = (TextView) dialog.findViewById(R.id.txt_pay);
+        TextView txt_ok = (TextView) dialog.findViewById(R.id.txt_ok);
 
+        txt_ok.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                FIRST_OFFER
+                dialog.dismiss();
+            }
+        });
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
