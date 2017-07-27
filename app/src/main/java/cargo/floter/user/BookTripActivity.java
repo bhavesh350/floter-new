@@ -433,16 +433,20 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
         } else {
             if (callNumber == 11 && o.optString("status").equals("OK")) {
                 try {
-                    List<Trip> trips = (List) new Gson().fromJson(o.getJSONArray("response").toString(), new C09566().getType());
+                    List<Trip> trips = new Gson().fromJson(o.getJSONArray("response").toString(), new C09566().getType());
                     int count = 0;
                     for (int i = 0; i < trips.size(); i++) {
                         if ((trips.get(i)).getTrip_status().equals(TripStatus.Finished.name())) {
                             count++;
                         }
-                        if (count >= 3) {
+                        int ref = count / 3;
+                        int rem = count % 3;
+                        if (count >= 3 && ref >= 1 && rem == 0) {
                             this.message = "GO";
                         } else {
-                            this.message = "Please complete 3 rides for the day and you will be applicable to apply the offer.\nThank you!";
+                            this.message = "Coupon will be applicable after every 3rd ride, make sure" +
+                                    "you have complete 3 rides and try to use the coupon. For reference the discount will be" +
+                                    "allowed for 4th, 7th, 11th ride for the same day.\nThank you!";
                         }
                     }
                     return;
