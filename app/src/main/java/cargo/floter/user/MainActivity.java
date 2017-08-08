@@ -99,7 +99,8 @@ import cargo.floter.user.utils.LocationProvider.LocationCallback;
 import cargo.floter.user.utils.LocationProvider.PermissionCallback;
 import cz.msebera.android.httpclient.protocol.HTTP;
 
-public class MainActivity extends CustomActivity implements ResponseCallback, FragmentDrawerListener, OnMapReadyCallback, OnCameraIdleListener, OnItemSelected, OnItemClicked, OnConnectionFailedListener, LocationCallback, PermissionCallback {
+public class MainActivity extends CustomActivity implements ResponseCallback, FragmentDrawerListener, OnMapReadyCallback,
+        OnCameraIdleListener, OnItemSelected, OnItemClicked, OnConnectionFailedListener, LocationCallback, PermissionCallback {
     protected static final String TAG = "MainActivity";
     private LatLngBounds DELHI = new LatLngBounds(new LatLng(-44.0d, 113.0d), new LatLng(-10.0d, 154.0d));
     private String ETA = "10";
@@ -146,6 +147,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             Intent intent = new Intent(MainActivity.this.getContext(), SearchActivity.class);
             intent.putExtra(AppConstants.EXTRA_1, "Enter pickup location");
             MainActivity.this.startActivityForResult(intent, 122);
+            isGoingToChangeCurrentLocation = true;
         }
     }
 
@@ -261,7 +263,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             } catch (Exception e) {
             }
             if (f < 3.0f) {
-                f = 3.0f;
+                f = 2.0f;
             }
             try {
                 estimatedTime = Integer.parseInt(duration);
@@ -276,13 +278,22 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                 } catch (Exception e3) {
                 }
             }
-            if (estimatedTime > 120) {
-                try {
-                    charge = (int) (((float) charge) + ((f - BitmapDescriptorFactory.HUE_GREEN) * ((float) Integer.parseInt(r.getPrice_per_min_after_60_min()))));
-                } catch (Exception e4) {
-                }
-            }
+//            if (estimatedTime > 120) {
+//                try {
+//                    charge = (int) (((float) charge) + ((f - BitmapDescriptorFactory.HUE_GREEN) * ((float) Integer.parseInt(r.getPrice_per_min_after_60_min()))));
+//                } catch (Exception e4) {
+//                }
+//            }
             charge += (int) (((float) charge) * 0.0f);
+            if (charge > 360) {
+                charge = charge - 20;
+            }
+            if (charge > 500) {
+                charge = charge - 40;
+            }
+            if (charge > 660) {
+                charge = charge - 50;
+            }
             SingleInstance.getInstance().setSourceLatLng(MainActivity.this.sourceLocation);
             SingleInstance.getInstance().setDestinationLatLng(MainActivity.this.destinationLocation);
             MainActivity.this.startActivity(new Intent(MainActivity.this, BookTripActivity.class).putExtra(AppConstants.EXTRA_1, MainActivity.this.mLocationText.getText().toString()).putExtra(AppConstants.EXTRA_2, MainActivity.this.destinationString).putExtra("ETA", MainActivity.this.ETA).putExtra("isBookLater", MainActivity.this.isBookLater).putExtra("PickUpTime", MainActivity.this.pickupTime).putExtra("DURATION", estimatedTime + "").putExtra("DISTANCE", f + "").putExtra("EST_PRICE", charge + "").putExtra("PRICE", "Rs. " + charge + " - Rs. " + (((10 - (charge % 10)) + charge) + 20)));
@@ -540,7 +551,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         RequestParams p = new RequestParams();
         p.put("lat", lat);
         p.put("lng", lng);
-        p.put("miles", 20);
+        p.put("miles", 10);
         postCall(getContext(), AppConstants.BASE_URL.replace("userapi", "driverapi") + "getnearbydriverlists?", p, "", 1);
     }
 
@@ -664,6 +675,19 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
     }
 
     public void onCameraIdle() {
+        if (isGoingToChangeCurrentLocation) {
+            this.driversMap = new HashMap();
+            this.currentBookText = "No Drivers...";
+            this.locMarkertext.setText("No Drivers...");
+            mMap.clear();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    isGoingToChangeCurrentLocation = false;
+                }
+            }, 1000);
+            return;
+        }
         Log.d("Camera position change", this.mMap.getCameraPosition() + "");
         this.mCenterLatLong = this.mMap.getCameraPosition().target;
         this.sourceLocation = this.mCenterLatLong;
@@ -677,6 +701,8 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         }
     }
 
+    private boolean isGoingToChangeCurrentLocation = false;
+
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1010 && ContextCompat.checkSelfPermission(getContext(), "android.permission.ACCESS_FINE_LOCATION") == -1) {
@@ -685,10 +711,19 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                if (!isGoingToChangeCurrentLocation) {
+                    isGoingToChangeCurrentLocation = false;
+                }
+            }
+        }, 1000);
         Place place;
         switch (requestCode) {
             case 122:
-                if (resultCode == -1) {
+                if (resultCode == RESULT_OK) {
                     place = SingleInstance.getInstance().getSelectedPlace();
                     this.sourceLocation = place.getLatLng();
                     Log.i("", "Place: " + place.getName());
@@ -730,6 +765,8 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             default:
                 return;
         }
+
+
     }
 
     private void changeMap(Location location) {
@@ -906,7 +943,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             return strAdd;
         } catch (Exception e) {
             e.printStackTrace();
-            Log.w("address", "Canont get Address!");
+            Log.w("address", "Cannot get Address!");
             return strAdd;
         }
     }
@@ -916,7 +953,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
     }
 
     public void handleNewLocation(Location location) {
-        this.sourceLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
         if (location != null) {
             try {
                 if (!this.isFirstSet) {
