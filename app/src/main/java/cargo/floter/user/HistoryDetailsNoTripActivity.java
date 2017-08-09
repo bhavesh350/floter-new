@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+
 import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,8 +22,12 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.LatLngBounds.Builder;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import cargo.floter.user.application.MyApp;
 import cargo.floter.user.application.SingleInstance;
 import cargo.floter.user.model.Trip;
+import cargo.floter.user.model.TripStatus;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +37,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -226,12 +232,19 @@ public class HistoryDetailsNoTripActivity extends CustomActivity implements OnMa
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle( "");
+        actionBar.setTitle("");
         setupUiElements();
     }
 
     private void setupUiElements() {
         Trip currentTrip = SingleInstance.getInstance().getHistoryTrip();
+
+        if(currentTrip.getTrip_status().equals(TripStatus.Upcoming.name()))
+        MyApp.popMessage("Message!",  currentTrip.getDriver().getD_name() + " has been assigned for this trip." +
+                "\nYou can call him driver " + currentTrip.getDriver().getD_phone() +
+                "\nIf any problem to contact with him you may contact to Floter support." +
+                "\nThank you.", HistoryDetailsNoTripActivity.this);
+
         this.mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         this.mapFragment.getMapAsync(this);
         this.txt_truck_name = (TextView) findViewById(R.id.txt_truck_name);
@@ -244,7 +257,11 @@ public class HistoryDetailsNoTripActivity extends CustomActivity implements OnMa
         this.txt_destination_address.setText(currentTrip.getTrip_to_loc());
         this.txt_source_address.setText(currentTrip.getTrip_from_loc());
         this.trip_status.setText(currentTrip.getTrip_status());
-        this.trip_date.setText(currentTrip.getTrip_modified());
+        try {
+            this.trip_date.setText(currentTrip.getTrip_modified());
+        } catch (Exception e) {
+        }
+
         this.trip_id.setText("FDA-" + currentTrip.getTrip_id());
     }
 

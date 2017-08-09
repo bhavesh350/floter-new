@@ -27,6 +27,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
+
 import cargo.floter.user.R;
 import cargo.floter.user.model.RateCard;
 import cargo.floter.user.model.Trip;
@@ -125,7 +126,10 @@ public class MyApp extends Application {
                 });
 
         AlertDialog alert = builder.create();
-        alert.show();
+        try {
+            alert.show();
+        }catch (Exception e){}
+
     }
 
     public static void popMessageAndFinish(String titleMsg, String errorMsg,
@@ -145,7 +149,11 @@ public class MyApp extends Application {
                 });
 
         AlertDialog alert = builder.create();
-        alert.show();
+        try {
+            alert.show();
+        } catch (Exception e) {
+        }
+
     }
 
     public static void showMassage(Context ctx, String msg) {
@@ -429,6 +437,7 @@ public class MyApp extends Application {
 //        System.out.println(sdf.format(cal.getTime()));
         return sdf.format(cal.getTime());
     }
+
     public static String millsToDate(long mills) {
 
         Date d = new Date(mills);
@@ -439,9 +448,11 @@ public class MyApp extends Application {
     public static String millsToDate2(long mills) {
         return new SimpleDateFormat("yyyy-MM-dd").format(new Date(mills));
     }
+
     public static String millsToDateTime(long mills) {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(mills));
     }
+
     public static String millsToTime(long mills) {
 
         Date d = new Date(mills);

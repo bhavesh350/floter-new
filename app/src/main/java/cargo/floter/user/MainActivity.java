@@ -455,7 +455,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             this.dimension.setText((this.f25r.get("Piaggio Ape")).getLength() + "x" + (this.f25r.get("Piaggio Ape")).getWidth() + "x" + (this.f25r.get("Piaggio Ape")).getHeight());
         } catch (Exception e) {
         }
-        actionBar.setTitle( "");
+        actionBar.setTitle("");
         this.drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         this.drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), this.mToolbar);
         this.drawerFragment.setDrawerListener(this);
@@ -471,6 +471,12 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         if (MyApp.getStatus(AppConstants.FIRST_OFFER)) {
             showFirstOfferDialog();
         }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isShownNoDriverDialog = false;
+            }
+        }, 2000);
     }
 
     private void showFirstOfferDialog() {
@@ -585,7 +591,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                 new SingleDateAndTimePickerDialog.Builder(getContext()).curved().mainColor(Color.parseColor("#0E577D")).title("Select Date & Time").listener(new SingleDateAndTimePickerDialog.Listener() {
                     public void onDateSelected(Date date) {
                         if (date.getTime() <= System.currentTimeMillis() + 3600000) {
-                            Snackbar.make(MainActivity.this.findViewById(R.id.btn_book_later),  "Pickup time should be at least 60 minutes from the current time", (int) CredentialsApi.CREDENTIAL_PICKER_REQUEST_CODE).show();
+                            Snackbar.make(MainActivity.this.findViewById(R.id.btn_book_later), "Pickup time should be at least 60 minutes from the current time", (int) CredentialsApi.CREDENTIAL_PICKER_REQUEST_CODE).show();
                             return;
                         }
                         MainActivity.this.pickupTime = MyApp.millsToDateTime(date.getTime());
@@ -937,7 +943,6 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                     MyApp.popMessage("Alert!", "Service is not available in your area.\nThis application is restricted to Odisha state only.\nThank you", getContext());
                     return strAdd;
                 }
-
             }
             Log.w("address", "No Address returned!");
             return strAdd;
@@ -1040,6 +1045,8 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         });
     }
 
+    private boolean isShownNoDriverDialog = true;
+
     public void onJsonObjectResponseReceived(JSONObject o, int callNumber) {
         if (callNumber != 1) {
             return;
@@ -1048,7 +1055,10 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             this.driversMap = new HashMap();
             NearbyDrivers nd = new Gson().fromJson(o.toString(), NearbyDrivers.class);
             if (nd.getResponse().size() == 0) {
-                MyApp.popMessage("Message", "No driver available in your area, please try after some time.", getContext());
+                if (!isShownNoDriverDialog) {
+                    isShownNoDriverDialog = true;
+                    MyApp.popMessage("Message", "No driver available in your area, please try after some time.", getContext());
+                }
                 return;
             }
             for (int i = 0; i < nd.getResponse().size(); i++) {

@@ -251,6 +251,14 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
         this.pickupTime = getIntent().getStringExtra("PickUpTime");
         setUpUiElements();
         loadTodaysHistory();
+
+        try {
+            currentTruck.getBase_fare();
+        } catch (Exception e) {
+            MyApp.showMassage(getContext(), "Some error occurred\nPlease try again.");
+            startActivity(new Intent(getContext(), MainActivity.class));
+            finishAffinity();
+        }
     }
 
     private void setUpUiElements() {
@@ -568,7 +576,11 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
 
     public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(this.receiver);
+        try {
+            unregisterReceiver(this.receiver);
+        } catch (Exception e) {
+        }
+
     }
 
     protected void onStop() {

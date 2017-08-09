@@ -430,6 +430,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
             }
             OnTripActivity.this.ll_feedback.setVisibility(View.VISIBLE);
             OnTripActivity.this.slideUp.show();
+            txt_user_name.setText(currentTrip.getDriver().getD_name());
             MyApp.popMessage("Message", "Please pay cash. We cannot process Paytm process system now.", OnTripActivity.this.getContext());
         }
 
@@ -490,11 +491,16 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
         setClick(R.id.share_trip);
         setTouchNClick(R.id.button_submit);
         setClick(R.id.txt_cancel_trip);
-        this.txt_user_name.setText(this.currentTrip.getDriver().getD_name());
-        this.txt_driver_name.setText(this.currentTrip.getDriver().getD_name() + "\n" + this.currentTrip.getDriver().getTruck_reg_no());
-        this.slideUp = new Builder(this.ll_feedback).withStartState(State.HIDDEN).withStartGravity(80).build();
-        this.slideUp = new Builder(this.ll_feedback).withListeners(new C09612()).withStartGravity(80).withGesturesEnabled(false).withStartState(State.HIDDEN).build();
-        this.rating_bar.setOnRatingBarChangeListener(new C05873());
+        try {
+            this.txt_user_name.setText(this.currentTrip.getDriver().getD_name());
+            this.txt_driver_name.setText(this.currentTrip.getDriver().getD_name() + "\n" + this.currentTrip.getDriver().getTruck_reg_no());
+            this.slideUp = new Builder(this.ll_feedback).withStartState(State.HIDDEN).withStartGravity(80).build();
+            this.slideUp = new Builder(this.ll_feedback).withListeners(new C09612()).withStartGravity(80).withGesturesEnabled(false).withStartState(State.HIDDEN).build();
+            this.rating_bar.setOnRatingBarChangeListener(new C05873());
+        }catch (Exception e){
+            MyApp.showMassage(getContext(),"Some error Occurred, please try again later.");
+        }
+
     }
 
     public void onClick(View v) {
@@ -869,6 +875,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
                         MyApp.setSharedPrefString(AppConstants.PAYBLE_TRIP_ID, "");
                         OnTripActivity.this.ll_feedback.setVisibility(View.VISIBLE);
                         OnTripActivity.this.slideUp.show();
+                        txt_user_name.setText(currentTrip.getDriver().getD_name());
                     }
                 }
 
@@ -884,6 +891,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
         } else if (this.paymentId.equals(AppEventsConstants.EVENT_PARAM_VALUE_NO)) {
             this.ll_feedback.setVisibility(View.VISIBLE);
             this.slideUp.show();
+            txt_user_name.setText(currentTrip.getDriver().getD_name());
             MyApp.popMessage("Message", "Cannot process the payment through Paytm. Please try to pay with cash this time.\nThank you!", getContext());
         } else {
             this.orderId += this.currentTrip.getTrip_id() + this.orderIdAppender;
@@ -1199,6 +1207,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
                 }
                 OnTripActivity.this.ll_feedback.setVisibility(View.VISIBLE);
                 OnTripActivity.this.slideUp.show();
+                txt_user_name.setText(currentTrip.getDriver().getD_name());
             }
 
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -1206,12 +1215,14 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
                 MyApp.spinnerStop();
                 OnTripActivity.this.ll_feedback.setVisibility(View.VISIBLE);
                 OnTripActivity.this.slideUp.show();
+                txt_user_name.setText(currentTrip.getDriver().getD_name());
             }
 
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 MyApp.spinnerStop();
                 OnTripActivity.this.ll_feedback.setVisibility(View.VISIBLE);
                 OnTripActivity.this.slideUp.show();
+                txt_user_name.setText(currentTrip.getDriver().getD_name());
             }
         });
     }
@@ -1238,6 +1249,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
                 if (response.optString("status").equals("ok")) {
                     OnTripActivity.this.ll_feedback.setVisibility(View.VISIBLE);
                     OnTripActivity.this.slideUp.show();
+                    txt_user_name.setText(currentTrip.getDriver().getD_name());
                     MyApp.setSharedPrefString(AppConstants.PAYBLE_TRIP_ID, "");
                     return;
                 }

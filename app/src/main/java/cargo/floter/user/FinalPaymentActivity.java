@@ -59,6 +59,7 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
     private TextView txt_payment;
     private TextView txt_rating_status;
     private TextView txt_to_location;
+    private TextView txt_user_name;
 
     class C05682 implements OnRatingBarChangeListener {
         C05682() {
@@ -314,6 +315,7 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
 
     private void setupUiElements() {
         this.txt_pay_paytm = (TextView) findViewById(R.id.txt_pay_paytm);
+        this.txt_user_name = (TextView) findViewById(R.id.txt_user_name);
         this.txt_pay_cash = (TextView) findViewById(R.id.txt_pay_cash);
         this.txt_to_location = (TextView) findViewById(R.id.txt_to_location);
         this.txt_from_location = (TextView) findViewById(R.id.txt_from_location);
@@ -322,6 +324,8 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
         this.rating_bar = (RatingBar) findViewById(R.id.rating_bar);
         this.txt_rating_status = (TextView) findViewById(R.id.txt_rating_status);
         this.ll_feedback = (RelativeLayout) findViewById(R.id.ll_feedback);
+
+
         setTouchNClick(R.id.txt_pay_paytm);
         setTouchNClick(R.id.txt_pay_cash);
         setTouchNClick(R.id.button_submit);
@@ -361,6 +365,7 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
             client.post(url, p, new C10983());
         } else if (v == this.button_submit) {
             RequestParams pp = new RequestParams();
+            txt_user_name.setText(currentTrip.getDriver().getD_name());
             pp.put("driver_id", currentTrip.getDriver().getDriver_id());
             pp.put("api_key", "ee059a1e2596c265fd61c44f1855875e");
             pp.put("d_rating", this.rating_bar.getRating() + "");
@@ -410,6 +415,7 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
                 this.txt_from_location.setText(currentTrip.getTrip_from_loc());
                 this.txt_to_location.setText(currentTrip.getTrip_to_loc());
                 getPaymentDetails(currentTrip.getFloter_id());
+                txt_user_name.setText(currentTrip.getDriver().getD_name());
             } catch (Exception e) {
             }
         } else if (o.optString("status").equals("OK") && callNumber == 2) {

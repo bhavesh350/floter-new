@@ -8,7 +8,8 @@ android {
         config {
             keyAlias 'floterUser'
             keyPassword '111111'
-            storeFile file('C:/Bhavesh/Floter_User/floter_user_key.jks')
+//            D:\Android\Projects\floter-new
+            storeFile file('D:/Android/Projects/floter-new/floter_user_key.jks')
             storePassword '111111'
         }
     }
@@ -18,8 +19,8 @@ android {
         applicationId "cargo.floter.user"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 8
-        versionName "1.8"
+        versionCode 10
+        versionName "1.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

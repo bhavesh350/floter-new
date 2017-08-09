@@ -72,13 +72,18 @@ public class TrackLiveTripsAdapter extends Adapter<TrackLiveTripsAdapter.Holder>
         if (TextUtils.isEmpty(holder.txt_status.getText().toString())) {
             holder.txt_status.setText("Unknown");
         }
-        holder.txt_date_time.setText(MyApp.convertTime(t.getTrip_modified()));
+        try {
+            holder.txt_date_time.setText(MyApp.convertTime(t.getTrip_modified()));
+        }catch (Exception e){}
+
         holder.txt_from.setText("From:" + t.getTrip_from_loc());
         holder.txt_to.setText("To:" + t.getTrip_to_loc());
         try {
             holder.txt_time.setText(t.getTrip_pickup_time().split(" ")[1]);
         } catch (Exception e) {
-            holder.txt_time.setText(MyApp.convertTime(t.getTrip_modified()).split(" ")[1].substring(0, 5));
+            try {
+                holder.txt_time.setText(MyApp.convertTime(t.getTrip_modified()).split(" ")[1].substring(0, 5));
+            }catch (Exception ed){}
         }
         if (position > this.previousPosition) {
             MyAnimationUtils.animate(holder, true);

@@ -74,7 +74,13 @@ public class TripListFragment extends CustomFragment {
         } else if (this.position == 2) {
             trips = new ArrayList();
             for (Trip t2 : SingleInstance.getInstance().getAllTrips()) {
-                if (!(t2.getTrip_status().equals(TripStatus.Finished.name()) || t2.getTrip_status().equals(TripStatus.Pending.name()) || t2.getTrip_status().equals(TripStatus.Cancelled.name()) || t2.getTrip_status().equals(AnalyticsEvents.PARAMETER_DIALOG_OUTCOME_VALUE_UNKNOWN) || TextUtils.isEmpty(t2.getTrip_status()))) {
+                if (!(t2.getTrip_status().equals(TripStatus.Finished.name())
+                        || t2.getTrip_status().equals(TripStatus.Pending.name())
+                        || t2.getTrip_status().equals(TripStatus.Cancelled.name())
+                        || t2.getTrip_status().equals(TripStatus.Declined.name())
+                        || t2.getTrip_status().equals(TripStatus.Upcoming.name())
+                        || t2.getTrip_status().equals(AnalyticsEvents.PARAMETER_DIALOG_OUTCOME_VALUE_UNKNOWN)
+                        || TextUtils.isEmpty(t2.getTrip_status()))) {
                     trips.add(t2);
                 }
             }

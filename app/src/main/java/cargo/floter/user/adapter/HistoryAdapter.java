@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.internal.AnalyticsEvents;
+
 import cargo.floter.user.R;
 import cargo.floter.user.HistoryDetailsActivity;
 import cargo.floter.user.HistoryDetailsNoTripActivity;
@@ -48,26 +49,41 @@ public class HistoryAdapter extends Adapter<HistoryAdapter.Holder> {
 
         public void onClick(View view) {
             Intent intent;
-            if ((HistoryAdapter.this.list.get(getLayoutPosition())).getTrip_status().equals(TripStatus.Finished.name())) {
-                intent = new Intent(HistoryAdapter.this.mContext.getActivity(), HistoryDetailsActivity.class);
-                SingleInstance.getInstance().setHistoryTrip(HistoryAdapter.this.list.get(getLayoutPosition()));
-                HistoryAdapter.this.mContext.startActivity(intent);
-            } else if ((HistoryAdapter.this.list.get(getLayoutPosition())).getTrip_status().equals(TripStatus.Declined.name())) {
-                intent = new Intent(HistoryAdapter.this.mContext.getActivity(), HistoryDetailsNoTripActivity.class);
-                SingleInstance.getInstance().setHistoryTrip(HistoryAdapter.this.list.get(getLayoutPosition()));
-                HistoryAdapter.this.mContext.startActivity(intent);
-            } else if ((HistoryAdapter.this.list.get(getLayoutPosition())).getTrip_status().equals(TripStatus.Finished.name()) || (HistoryAdapter.this.list.get(getLayoutPosition())).getTrip_status().equals(TripStatus.Pending.name()) || (HistoryAdapter.this.list.get(getLayoutPosition())).getTrip_status().equals(AnalyticsEvents.PARAMETER_DIALOG_OUTCOME_VALUE_UNKNOWN) || TextUtils.isEmpty((HistoryAdapter.this.list.get(getLayoutPosition())).getTrip_status())) {
-                intent = new Intent(HistoryAdapter.this.mContext.getActivity(), HistoryDetailsNoTripActivity.class);
-                SingleInstance.getInstance().setHistoryTrip(HistoryAdapter.this.list.get(getLayoutPosition()));
-                HistoryAdapter.this.mContext.startActivity(intent);
+            if ((list.get(getLayoutPosition())).getTrip_status().equals(TripStatus.Finished.name())) {
+                intent = new Intent(mContext.getActivity(), HistoryDetailsActivity.class);
+                SingleInstance.getInstance().setHistoryTrip(list.get(getLayoutPosition()));
+                mContext.startActivity(intent);
+            } else if ((list.get(getLayoutPosition())).getTrip_status().equals(TripStatus.Declined.name())) {
+                intent = new Intent(mContext.getActivity(), HistoryDetailsNoTripActivity.class);
+                SingleInstance.getInstance().setHistoryTrip(list.get(getLayoutPosition()));
+                mContext.startActivity(intent);
+            } else if ((list.get(getLayoutPosition())).getTrip_status().equals(TripStatus.Finished.name())
+                    || (list.get(getLayoutPosition())).getTrip_status().equals(TripStatus.Pending.name())
+                    || (list.get(getLayoutPosition())).getTrip_status().equals(TripStatus.Upcoming.name())
+                    || (list.get(getLayoutPosition())).getTrip_status().equals("Unknown")
+                    || TextUtils.isEmpty((list.get(getLayoutPosition())).getTrip_status())) {
+                intent = new Intent(mContext.getActivity(), HistoryDetailsNoTripActivity.class);
+                SingleInstance.getInstance().setHistoryTrip(list.get(getLayoutPosition()));
+                mContext.startActivity(intent);
             } else {
                 HashMap<String, Trip> allTrips = MyApp.getApplication().readTrip();
-                Trip tt = allTrips.get((HistoryAdapter.this.list.get(getLayoutPosition())).getTrip_id());
-                tt.setTrip_status(TripStatus.Accepted.name());
-                allTrips.put((HistoryAdapter.this.list.get(getLayoutPosition())).getTrip_id(), tt);
+                if (allTrips.containsKey((list.get(getLayoutPosition())).getTrip_id())) {
+                    Trip tt = allTrips.get((list.get(getLayoutPosition())).getTrip_id());
+                    tt.setTrip_status(TripStatus.Accepted.name());
+                    allTrips.put((list.get(getLayoutPosition())).getTrip_id(), tt);
+                } else {
+                    Trip t = list.get(getLayoutPosition());
+                    t.setTrip_status(TripStatus.Accepted.name());
+                    allTrips.put((list.get(getLayoutPosition())).getTrip_id(), t);
+                }
+
+
                 MyApp.getApplication().writeTrip(allTrips);
-                HistoryAdapter.this.mContext.getActivity().startActivity(new Intent(HistoryAdapter.this.mContext.getActivity(), OnTripActivity.class).putExtra(AppConstants.EXTRA_1, (HistoryAdapter.this.list.get(getLayoutPosition())).getTrip_id()));
-                HistoryAdapter.this.mContext.getActivity().finish();
+                mContext.getActivity().startActivity(new Intent(mContext.getActivity(),
+                        OnTripActivity.class).putExtra(AppConstants.EXTRA_1,
+                        (list.get(getLayoutPosition())).getTrip_id()));
+                mContext.getActivity().finish();
+
             }
         }
     }
@@ -85,9 +101,13 @@ public class HistoryAdapter extends Adapter<HistoryAdapter.Holder> {
         Trip t = this.list.get(position);
         holder.txt_status.setText(t.getTrip_status());
         if (TextUtils.isEmpty(holder.txt_status.getText().toString())) {
-            holder.txt_status.setText(AnalyticsEvents.PARAMETER_DIALOG_OUTCOME_VALUE_UNKNOWN);
+            holder.txt_status.setText("Unknown");
         }
-        holder.txt_date_time.setText(MyApp.convertTime(t.getTrip_modified()));
+        try {
+            holder.txt_date_time.setText(MyApp.convertTime(t.getTrip_modified()));
+        } catch (Exception e) {
+        }
+
         holder.txt_from.setText("From:" + t.getTrip_from_loc());
         holder.txt_to.setText("To:" + t.getTrip_to_loc());
         if (position > this.previousPosition) {
