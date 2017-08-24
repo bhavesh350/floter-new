@@ -34,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -68,6 +69,7 @@ import com.paytm.pgsdk.PaytmConstants;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
+
 import cargo.floter.user.CustomActivity.ResponseCallback;
 import cargo.floter.user.application.MyApp;
 import cargo.floter.user.fragments.FragmentDrawer;
@@ -81,6 +83,7 @@ import cargo.floter.user.utils.LocationProvider.LocationCallback;
 import cargo.floter.user.utils.LocationProvider.PermissionCallback;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.protocol.HTTP;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,6 +94,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -420,7 +424,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
             MyApp.spinnerStop();
             if (o.optString("status").equals("OK")) {
                 try {
-                    OnTripActivity.this.payment =  new Gson().fromJson(o.getJSONArray("response").get(0).toString(), Payment.class);
+                    OnTripActivity.this.payment = new Gson().fromJson(o.getJSONArray("response").get(0).toString(), Payment.class);
                     OnTripActivity.this.showPaymentDialog(false);
                     return;
                 } catch (JSONException e) {
@@ -472,7 +476,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
         this.drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), this.mToolbar);
         this.drawerFragment.setDrawerListener(this);
         this.tripId = getIntent().getStringExtra(AppConstants.EXTRA_1);
-        this.currentTrip =  MyApp.getApplication().readTrip().get(this.tripId);
+        this.currentTrip = MyApp.getApplication().readTrip().get(this.tripId);
         setupUiElements();
         new Handler().postDelayed(new C05861(), 10000);
     }
@@ -497,8 +501,8 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
             this.slideUp = new Builder(this.ll_feedback).withStartState(State.HIDDEN).withStartGravity(80).build();
             this.slideUp = new Builder(this.ll_feedback).withListeners(new C09612()).withStartGravity(80).withGesturesEnabled(false).withStartState(State.HIDDEN).build();
             this.rating_bar.setOnRatingBarChangeListener(new C05873());
-        }catch (Exception e){
-            MyApp.showMassage(getContext(),"Some error Occurred, please try again later.");
+        } catch (Exception e) {
+            MyApp.showMassage(getContext(), "Some error Occurred, please try again later.");
         }
 
     }
@@ -1071,26 +1075,27 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
 
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     MyApp.spinnerStop();
-                    Log.d("Response:", response.toString());
                     try {
-                        if (response.optString(PaytmConstants.STATUS).equals("TXN_SUCCESS")) {
-                            OnTripActivity.this.checkStatus(response.getJSONObject("response").toString());
-                            return;
-                        }
-                        MyApp.popMessage("Error", "Payment did not processed\nPlease try again", OnTripActivity.this.getContext());
-                        OnTripActivity.this.showPaymentDialog(true);
+                        Log.d("Response:", response.getJSONObject("response").toString());
+                        OnTripActivity.this.checkStatus(response.getJSONObject("response").toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
+                        return;
                 }
 
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
                     MyApp.spinnerStop();
+                    MyApp.popMessage("Error", "Payment did not processed\nPlease try again", OnTripActivity.this.getContext());
+                    OnTripActivity.this.showPaymentDialog(true);
                 }
 
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     MyApp.spinnerStop();
+                    MyApp.popMessage("Error", "Payment did not processed\nPlease try again", OnTripActivity.this.getContext());
+                    OnTripActivity.this.showPaymentDialog(true);
                 }
             }
 
@@ -1098,14 +1103,18 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
                 Log.d("LOG", "UI Error Occur.");
                 AlertDialog.Builder b = new AlertDialog.Builder(OnTripActivity.this.getContext());
                 b.setIcon(R.mipmap.ic_launcher);
-                b.setMessage( "UI Error Occurred for the paytm payment flow, Do you want to pay with paytm?");
-                b.setTitle( "Error!");
-                b.setPositiveButton( "Pay With Paytm", new C05781());
-                b.setNegativeButton( "Pay Cash", new C05792());
+                b.setMessage("UI Error Occurred for the paytm payment flow, Do you want to pay with paytm?");
+                b.setTitle("Error!");
+                b.setPositiveButton("Pay With Paytm", new C05781());
+                b.setNegativeButton("Pay Cash", new C05792());
                 b.create().show();
             }
 
             public void onTransactionResponse(Bundle inResponse) {
+                if (!inResponse.getString("RESPMSG").contains("Successful")) {
+                    MyApp.popMessage("Error", inResponse.getString("RESPMSG"), getContext());
+                    return;
+                }
                 Log.d("LOG", "Payment Transaction : " + inResponse);
                 MyApp.spinnerStart(OnTripActivity.this.getContext(), "Please wait...");
                 String url = "http://floter.in/floterapi/paytm/getTransactionStatus.php";
@@ -1123,44 +1132,44 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
                 Log.d("LOG", "Network Error Occur.");
                 AlertDialog.Builder b = new AlertDialog.Builder(OnTripActivity.this.getContext());
                 b.setIcon((int) R.mipmap.ic_launcher);
-                b.setMessage( "Network Error Occurred for the paytm payment flow, Do you want to pay with paytm?");
-                b.setTitle( "Error!");
-                b.setPositiveButton( "Pay With Paytm", new C05804());
-                b.setNegativeButton( "Pay Cash", new C05815());
+                b.setMessage("Network Error Occurred for the paytm payment flow, Do you want to pay with paytm?");
+                b.setTitle("Error!");
+                b.setPositiveButton("Pay With Paytm", new C05804());
+                b.setNegativeButton("Pay Cash", new C05815());
                 b.create().show();
             }
 
             public void clientAuthenticationFailed(String inErrorMessage) {
                 AlertDialog.Builder b = new AlertDialog.Builder(OnTripActivity.this.getContext());
                 b.setIcon((int) R.mipmap.ic_launcher);
-                b.setMessage( "Client authentication Error Occurred for the paytm payment flow, Do you want to pay with paytm?");
-                b.setTitle( "Error!");
-                b.setPositiveButton( "Pay With Paytm", new C05826());
-                b.setNegativeButton( "Pay Cash", new C05837());
+                b.setMessage("Client authentication Error Occurred for the paytm payment flow, Do you want to pay with paytm?");
+                b.setTitle("Error!");
+                b.setPositiveButton("Pay With Paytm", new C05826());
+                b.setNegativeButton("Pay Cash", new C05837());
                 b.create().show();
             }
 
             public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
                 AlertDialog.Builder b = new AlertDialog.Builder(OnTripActivity.this.getContext());
                 b.setIcon((int) R.mipmap.ic_launcher);
-                b.setMessage( "Some Error Occurred for the paytm payment flow, Do you want to pay with paytm?");
-                b.setTitle( "Error!");
-                b.setPositiveButton( "Pay With Paytm", new C05848());
-                b.setNegativeButton( "Pay Cash", new C05859());
+                b.setMessage("Some Error Occurred for the paytm payment flow, Do you want to pay with paytm?");
+                b.setTitle("Error!");
+                b.setPositiveButton("Pay With Paytm", new C05848());
+                b.setNegativeButton("Pay Cash", new C05859());
                 b.create().show();
             }
 
             public void onBackPressedCancelTransaction() {
                 AlertDialog.Builder b = new AlertDialog.Builder(OnTripActivity.this.getContext());
                 b.setIcon((int) R.mipmap.ic_launcher);
-                b.setMessage( "Payment cancelled for the paytm payment flow by you, Do you want to pay with paytm?");
-                b.setTitle( "Error!");
-                b.setPositiveButton( "Pay With Paytm", new DialogInterface.OnClickListener() {
+                b.setMessage("Payment cancelled for the paytm payment flow by you, Do you want to pay with paytm?");
+                b.setTitle("Error!");
+                b.setPositiveButton("Pay With Paytm", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         OnTripActivity.this.updatePaymentInfo(true);
                     }
                 });
-                b.setNegativeButton( "Pay Cash", new DialogInterface.OnClickListener() {
+                b.setNegativeButton("Pay Cash", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         OnTripActivity.this.updatePaymentInfo(false);
                     }
@@ -1171,14 +1180,14 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
             public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
                 AlertDialog.Builder b = new AlertDialog.Builder(OnTripActivity.this.getContext());
                 b.setIcon((int) R.mipmap.ic_launcher);
-                b.setMessage( "Paytm Transaction failed, Do you want to pay with paytm?");
-                b.setTitle( "Error!");
-                b.setPositiveButton( "Pay With Paytm", new DialogInterface.OnClickListener() {
+                b.setMessage("Paytm Transaction failed, Do you want to pay with paytm?");
+                b.setTitle("Error!");
+                b.setPositiveButton("Pay With Paytm", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         OnTripActivity.this.updatePaymentInfo(true);
                     }
                 });
-                b.setNegativeButton( "Pay Cash", new DialogInterface.OnClickListener() {
+                b.setNegativeButton("Pay Cash", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         OnTripActivity.this.updatePaymentInfo(false);
                     }
@@ -1246,7 +1255,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 MyApp.spinnerStop();
                 Log.d("Response:", response.toString());
-                if (response.optString("status").equals("ok")) {
+                if (response.optString("status").equals("OK")) {
                     OnTripActivity.this.ll_feedback.setVisibility(View.VISIBLE);
                     OnTripActivity.this.slideUp.show();
                     txt_user_name.setText(currentTrip.getDriver().getD_name());

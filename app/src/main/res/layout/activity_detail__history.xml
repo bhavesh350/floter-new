@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbar"
@@ -23,6 +24,7 @@
             android:textSize="@dimen/dim_20"
             android:typeface="serif"></TextView>
     </android.support.v7.widget.Toolbar>
+
     <RelativeLayout
         android:id="@+id/input_fields"
         android:layout_width="fill_parent"
@@ -276,6 +278,29 @@
 
                 <TextView
                     android:id="@+id/discount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dim_8"
+                    android:text="0"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dim_18" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dim_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dim_5"
+                    android:text="GST (5%)"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dim_18" />
+
+                <TextView
+                    android:id="@+id/txt_gst"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

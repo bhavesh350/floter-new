@@ -374,7 +374,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
                 p.put("driver_id", "91");
                 p.put("book_later", 1);
             } else {
-                p.put("driver_id", ((Response) SingleInstance.getInstance().getNotifiableDrivers().get(0)).getDriver_id());
+                p.put("driver_id", (SingleInstance.getInstance().getNotifiableDrivers().get(0)).getDriver_id());
                 p.put("book_later", 0);
             }
             p.put("promo_id", "");
@@ -454,7 +454,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
                         } else {
                             this.message = "Coupon will be applicable after every 3rd ride, make sure" +
                                     "you have complete 3 rides and try to use the coupon. For reference the discount will be" +
-                                    "allowed for 4th, 7th, 11th ride for the same day.\nThank you!";
+                                    " allowed for 4th, 7th, 11th ride for the same day.\nThank you!";
                         }
                     }
                     return;

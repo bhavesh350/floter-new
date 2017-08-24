@@ -57,7 +57,7 @@ public class VehicleAdapter extends Adapter<VehicleAdapter.DataHolder> {
     }
 
     public void onBindViewHolder(DataHolder holder, int position) {
-        RateCardResponse item = (RateCardResponse) this.listdata.get(position);
+        RateCardResponse item = this.listdata.get(position);
         holder.title.setText(item.getCar_name());
         holder.subTitle.setText("Capacity : " + item.getCapacity() + " KG");
         holder.load.setText("Base Fare : " + item.getBase_fare() + " Rs. for 2 Km");

@@ -397,6 +397,13 @@
                             android:text="LxBxH"
                             android:textSize="@dimen/dim_15" />
                     </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="GST 5% (extra)"
+                        android:textColor="@color/black" />
                 </LinearLayout>
             </RelativeLayout>
         </RelativeLayout>

@@ -82,11 +82,22 @@
         <TextView
             android:id="@+id/address_merchant"
             android:layout_width="fill_parent"
-            android:layout_height="50.0dip"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/dimension"
             android:drawableTop="@drawable/back"
             android:paddingLeft="16.0dip"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/dim_15" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:drawableTop="@drawable/back"
+            android:paddingLeft="16.0dip"
+            android:gravity="center"
+            android:text="GST 5% Extra"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/dim_12" />
+
     </LinearLayout>
 </android.support.v7.widget.CardView>

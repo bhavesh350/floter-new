@@ -14,6 +14,7 @@ import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.facebook.appevents.AppEventsConstants;
 import com.google.firebase.analytics.FirebaseAnalytics.Param;
 import com.google.gson.Gson;
@@ -28,6 +29,7 @@ import com.paytm.pgsdk.PaytmConstants;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
+
 import cargo.floter.user.CustomActivity.ResponseCallback;
 import cargo.floter.user.application.MyApp;
 import cargo.floter.user.model.Payment;
@@ -35,8 +37,10 @@ import cargo.floter.user.model.Trip;
 import cargo.floter.user.model.TripStatus;
 import cargo.floter.user.utils.AppConstants;
 import cz.msebera.android.httpclient.Header;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +50,7 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
     private boolean isFromHistory = false;
     private RelativeLayout ll_feedback;
     private String orderId = "ORDER_";
-    private String orderIdAppender = "";
+    private String orderIdAppender = "1";
     private Payment payment = null;
     private RatingBar rating_bar;
     private SlideUp slideUp;
@@ -67,15 +71,15 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
 
         public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
             if (v <= 1.0f) {
-                FinalPaymentActivity.this.txt_rating_status.setText("Bad");
+                txt_rating_status.setText("Bad");
             } else if (v > 1.0f && ((double) v) < 2.5d) {
-                FinalPaymentActivity.this.txt_rating_status.setText("Below Average");
+                txt_rating_status.setText("Below Average");
             } else if (((double) v) >= 2.5d && ((double) v) < 3.5d) {
-                FinalPaymentActivity.this.txt_rating_status.setText("Average");
+                txt_rating_status.setText("Average");
             } else if (((double) v) < 3.5d || ((double) v) >= 4.5d) {
-                FinalPaymentActivity.this.txt_rating_status.setText("Excellent");
+                txt_rating_status.setText("Excellent");
             } else {
-                FinalPaymentActivity.this.txt_rating_status.setText("Good");
+                txt_rating_status.setText("Good");
             }
         }
     }
@@ -103,11 +107,8 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
                 MyApp.spinnerStop();
                 Log.d("Response:", response.toString());
                 try {
-                    if (response.optString(PaytmConstants.STATUS).equals("TXN_SUCCESS")) {
-                        FinalPaymentActivity.this.checkStatus(response.getJSONObject("response").toString());
-                    } else {
-                        MyApp.popMessage("Error", "Payment did not processed\nPlease try again", FinalPaymentActivity.this.getContext());
-                    }
+                    Log.d("Response:", response.getJSONObject("response").toString());
+                    checkStatus(response.getJSONObject("response").toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -116,10 +117,12 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 MyApp.spinnerStop();
+                MyApp.popMessage("Error", "Payment did not processed\nPlease try again", getContext());
             }
 
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 MyApp.spinnerStop();
+                MyApp.popMessage("Error", "Payment did not processed\nPlease try again", getContext());
             }
         }
 
@@ -128,16 +131,20 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
 
         public void someUIErrorOccurred(String inErrorMessage) {
             Log.d("LOG", "UI Error Occur.");
-            MyApp.popMessage("Error!", "UI Error Occurred for the paytm payment flow, Do you want to pay with paytm?", FinalPaymentActivity.this.getContext());
+            MyApp.popMessage("Error!", "UI Error Occurred for the paytm payment flow, Do you want to pay with paytm?", getContext());
         }
 
         public void onTransactionResponse(Bundle inResponse) {
+            if (!inResponse.getString("RESPMSG").contains("Successful")) {
+                MyApp.popMessage("Error", inResponse.getString("RESPMSG"), getContext());
+                return;
+            }
             Log.d("LOG", "Payment Transaction : " + inResponse);
-            MyApp.spinnerStart(FinalPaymentActivity.this.getContext(), "Please wait...");
+            MyApp.spinnerStart(getContext(), "Please wait...");
             String url = "http://floter.in/floterapi/paytm/getTransactionStatus.php";
             RequestParams p = new RequestParams();
             p.put(PaytmConstants.MERCHANT_ID, "FLOTER55912639344993");
-            p.put("ORDER_ID", FinalPaymentActivity.this.orderId);
+            p.put("ORDER_ID", orderId);
             Log.d("URl:", url);
             Log.d("Request:", p.toString());
             AsyncHttpClient client = new AsyncHttpClient();
@@ -147,23 +154,23 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
 
         public void networkNotAvailable() {
             Log.d("LOG", "Network Error Occur.");
-            MyApp.popMessage("Error!", "Network Error Occurred for the paytm payment flow.", FinalPaymentActivity.this.getContext());
+            MyApp.popMessage("Error!", "Network Error Occurred for the paytm payment flow.", getContext());
         }
 
         public void clientAuthenticationFailed(String inErrorMessage) {
-            MyApp.popMessage("Error!", "Client authentication Error Occurred for the paytm payment flow.", FinalPaymentActivity.this.getContext());
+            MyApp.popMessage("Error!", "Client authentication Error Occurred for the paytm payment flow.", getContext());
         }
 
         public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
-            MyApp.popMessage("Error!", "Some Error Occurred for the paytm payment flow.", FinalPaymentActivity.this.getContext());
+            MyApp.popMessage("Error!", "Some Error Occurred for the paytm payment flow.", getContext());
         }
 
         public void onBackPressedCancelTransaction() {
-            MyApp.popMessage("Error!", "Payment cancelled for the paytm payment flow by you.", FinalPaymentActivity.this.getContext());
+            MyApp.popMessage("Error!", "Payment cancelled for the paytm payment flow by you.", getContext());
         }
 
         public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
-            MyApp.popMessage("Error!", "Paytm Transaction failed.", FinalPaymentActivity.this.getContext());
+            MyApp.popMessage("Error!", "Paytm Transaction failed.", getContext());
         }
     }
 
@@ -175,12 +182,12 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
             MyApp.spinnerStop();
             Log.d("Response:", response.toString());
             if (response.optString("status").equals("OK")) {
-                if (!FinalPaymentActivity.this.isFromHistory) {
+                if (!isFromHistory) {
                     MyApp.setSharedPrefString("SHOW_PAY", "NO");
                     MyApp.setSharedPrefString(AppConstants.PAYBLE_TRIP_ID, "");
                 }
-                FinalPaymentActivity.this.ll_feedback.setVisibility(View.VISIBLE);
-                FinalPaymentActivity.this.slideUp.show();
+                ll_feedback.setVisibility(View.VISIBLE);
+                slideUp.show();
             }
         }
 
@@ -203,12 +210,12 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
             Log.d("Response:", response.toString());
             try {
                 if (response.optString("status").equals("ok")) {
-                    FinalPaymentActivity.this.createPaymentFlow(response.getJSONObject("response").optString("CHECKSUMHASH"));
+                    createPaymentFlow(response.getJSONObject("response").optString("CHECKSUMHASH"));
                 } else {
-                    MyApp.popMessage("Error", response.optString("error"), FinalPaymentActivity.this.getContext());
+                    MyApp.popMessage("Error", response.optString("error"), getContext());
                 }
             } catch (JSONException e) {
-                MyApp.showMassage(FinalPaymentActivity.this.getContext(), "Parsing error");
+                MyApp.showMassage(getContext(), "Parsing error");
                 e.printStackTrace();
             }
         }
@@ -217,18 +224,18 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
             super.onFailure(statusCode, headers, throwable, errorResponse);
             MyApp.spinnerStop();
             if (statusCode == 0) {
-                MyApp.popMessage("Error!", "Time-out error occurred.\nPlease try again", FinalPaymentActivity.this.getContext());
+                MyApp.popMessage("Error!", "Time-out error occurred.\nPlease try again", getContext());
             } else {
-                MyApp.popMessage("Error!", "Error_" + statusCode + "Some error occurred", FinalPaymentActivity.this.getContext());
+                MyApp.popMessage("Error!", "Error_" + statusCode + "Some error occurred", getContext());
             }
         }
 
         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
             MyApp.spinnerStop();
             if (statusCode == 0) {
-                MyApp.popMessage("Error!", "Time-out error occurred.\nPlease try again", FinalPaymentActivity.this.getContext());
+                MyApp.popMessage("Error!", "Time-out error occurred.\nPlease try again", getContext());
             } else {
-                MyApp.popMessage("Error!", "Error_" + statusCode + "Some error occurred", FinalPaymentActivity.this.getContext());
+                MyApp.popMessage("Error!", "Error_" + statusCode + "Some error occurred", getContext());
             }
         }
     }
@@ -241,24 +248,24 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
             MyApp.spinnerStop();
             Log.d("Response:", response.toString());
             if (response.optString(PaytmConstants.STATUS).equals("TXN_SUCCESS")) {
-                FinalPaymentActivity.this.updatePaymentApi(response.optString(PaytmConstants.TRANSACTION_ID), response.optString(PaytmConstants.ORDER_ID));
+                updatePaymentApi(response.optString(PaytmConstants.TRANSACTION_ID), response.optString(PaytmConstants.ORDER_ID));
                 return;
             }
-            FinalPaymentActivity.this.ll_feedback.setVisibility(View.VISIBLE);
-            FinalPaymentActivity.this.slideUp.show();
+            ll_feedback.setVisibility(View.VISIBLE);
+            slideUp.show();
         }
 
         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
             super.onFailure(statusCode, headers, throwable, errorResponse);
             MyApp.spinnerStop();
-            FinalPaymentActivity.this.ll_feedback.setVisibility(View.VISIBLE);
-            FinalPaymentActivity.this.slideUp.show();
+            ll_feedback.setVisibility(View.VISIBLE);
+            slideUp.show();
         }
 
         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
             MyApp.spinnerStop();
-            FinalPaymentActivity.this.ll_feedback.setVisibility(View.VISIBLE);
-            FinalPaymentActivity.this.slideUp.show();
+            ll_feedback.setVisibility(View.VISIBLE);
+            slideUp.show();
         }
     }
 
@@ -511,30 +518,30 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
                 MyApp.spinnerStop();
                 Log.d("Response:", response.toString());
                 if (response.optString("status").equals("OK")) {
-                    FinalPaymentActivity.this.ll_feedback.setVisibility(View.VISIBLE);
-                    FinalPaymentActivity.this.slideUp.show();
-                    if (!FinalPaymentActivity.this.isFromHistory) {
+                    ll_feedback.setVisibility(View.VISIBLE);
+                    slideUp.show();
+                    if (!isFromHistory) {
                         MyApp.setSharedPrefString("SHOW_PAY", "NO");
                         MyApp.setSharedPrefString(AppConstants.PAYBLE_TRIP_ID, "");
                         return;
                     }
                     return;
                 }
-                MyApp.showMassage(FinalPaymentActivity.this.getContext(), "Retrying...");
-                FinalPaymentActivity.this.updatePaymentApi(txnId, orderId);
+                MyApp.showMassage(getContext(), "Retrying...");
+                updatePaymentApi(txnId, orderId);
             }
 
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 MyApp.spinnerStop();
-                MyApp.showMassage(FinalPaymentActivity.this.getContext(), "Retrying...");
-                FinalPaymentActivity.this.updatePaymentApi(txnId, orderId);
+                MyApp.showMassage(getContext(), "Retrying...");
+                updatePaymentApi(txnId, orderId);
             }
 
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 MyApp.spinnerStop();
-                MyApp.showMassage(FinalPaymentActivity.this.getContext(), "Retrying...");
-                FinalPaymentActivity.this.updatePaymentApi(txnId, orderId);
+                MyApp.showMassage(getContext(), "Retrying...");
+                updatePaymentApi(txnId, orderId);
             }
         });
     }

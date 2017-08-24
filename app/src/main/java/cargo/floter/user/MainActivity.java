@@ -284,7 +284,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
 //                } catch (Exception e4) {
 //                }
 //            }
-            charge += (int) (((float) charge) * 0.0f);
+            charge += (int) (((float) charge) * 0.05f);
             if (charge > 360) {
                 charge = charge - 20;
             }
@@ -296,7 +296,16 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             }
             SingleInstance.getInstance().setSourceLatLng(MainActivity.this.sourceLocation);
             SingleInstance.getInstance().setDestinationLatLng(MainActivity.this.destinationLocation);
-            MainActivity.this.startActivity(new Intent(MainActivity.this, BookTripActivity.class).putExtra(AppConstants.EXTRA_1, MainActivity.this.mLocationText.getText().toString()).putExtra(AppConstants.EXTRA_2, MainActivity.this.destinationString).putExtra("ETA", MainActivity.this.ETA).putExtra("isBookLater", MainActivity.this.isBookLater).putExtra("PickUpTime", MainActivity.this.pickupTime).putExtra("DURATION", estimatedTime + "").putExtra("DISTANCE", f + "").putExtra("EST_PRICE", charge + "").putExtra("PRICE", "Rs. " + charge + " - Rs. " + (((10 - (charge % 10)) + charge) + 20)));
+            MainActivity.this.startActivity(new Intent(MainActivity.this, BookTripActivity.class)
+                    .putExtra(AppConstants.EXTRA_1, MainActivity.this.mLocationText.getText().toString())
+                    .putExtra(AppConstants.EXTRA_2, MainActivity.this.destinationString)
+                    .putExtra("ETA", MainActivity.this.ETA)
+                    .putExtra("isBookLater", MainActivity.this.isBookLater)
+                    .putExtra("PickUpTime", MainActivity.this.pickupTime)
+                    .putExtra("DURATION", estimatedTime + "")
+                    .putExtra("DISTANCE", f + "")
+                    .putExtra("EST_PRICE", charge + "")
+                    .putExtra("PRICE", "Rs. " + charge + " - Rs. " + (((10 - (charge % 10)) + charge) + 20)));
         }
     }
 
