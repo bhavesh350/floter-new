@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -14,18 +15,22 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+
 import cargo.floter.user.application.MyApp;
 import cargo.floter.user.application.SingleInstance;
 import cargo.floter.user.model.RateCard;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import cargo.floter.user.utils.AppConstants;
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -42,7 +47,28 @@ public class SplashActivity extends CustomActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
         getApiData();
-//        getHashKey();
+
+        if (!MyApp.getStatus("NewApp")) {
+            MyApp.setStatus("NewApp", true);
+            MyApp.setStatus(AppConstants.IS_LOGIN, false);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        FirebaseInstanceId.getInstance().deleteInstanceId();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void result) {
+                    String token = FirebaseInstanceId.getInstance().getToken();
+                    MyApp.setStatus(AppConstants.IS_LOGIN, false);
+                }
+            }.execute();
+        }
 
     }
 

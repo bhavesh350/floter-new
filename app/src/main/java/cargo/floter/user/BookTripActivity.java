@@ -97,7 +97,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
         }
 
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            BookTripActivity.this.editText.setText(BookTripActivity.this.getStringNumber(((Contact) parent.getItemAtPosition(position)).id + ""));
+            editText.setText(getStringNumber(((Contact) parent.getItemAtPosition(position)).id + ""));
         }
     }
 
@@ -107,14 +107,14 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
 
         public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
             if (i == R.id.radio_loose) {
-                BookTripActivity.this.isGoodsSet = true;
-                BookTripActivity.this.isQtySet = false;
-                BookTripActivity.this.edt_qty_goods.setText("");
-                BookTripActivity.this.edt_qty_goods.setVisibility(View.GONE);
+                isGoodsSet = true;
+                isQtySet = false;
+                edt_qty_goods.setText("");
+                edt_qty_goods.setVisibility(View.GONE);
             } else if (i == R.id.radio_qty) {
-                BookTripActivity.this.isQtySet = true;
-                BookTripActivity.this.isGoodsSet = true;
-                BookTripActivity.this.edt_qty_goods.setVisibility(View.VISIBLE);
+                isQtySet = true;
+                isGoodsSet = true;
+                edt_qty_goods.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -124,8 +124,8 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
         }
 
         public void onClick(DialogInterface d, int i) {
-            BookTripActivity.this.isCouponValid = true;
-            MyApp.showMassage(BookTripActivity.this.getContext(), "Coupon applied successfully.");
+            isCouponValid = true;
+            MyApp.showMassage(getContext(), "Coupon applied successfully.");
             d.dismiss();
         }
     }
@@ -154,21 +154,21 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
 
         public void onReceive(Context context, Intent intent) {
             if (intent.getStringExtra("TYPE").equals("TRIP_ACCEPTED")) {
-                BookTripActivity.this.isDriverSearched = true;
-                BookTripActivity.this.loader.stopProgress();
-                BookTripActivity.this.loader.setVisibility(View.VISIBLE);
+                isDriverSearched = true;
+                loader.stopProgress();
+                loader.setVisibility(View.VISIBLE);
                 HashMap<String, Trip> allTrips = MyApp.getApplication().readTrip();
-                Trip tt = allTrips.get(BookTripActivity.this.tripId);
+                Trip tt = allTrips.get(tripId);
                 tt.setTrip_status(TripStatus.Accepted.name());
-                allTrips.put(BookTripActivity.this.tripId, tt);
+                allTrips.put(tripId, tt);
                 MyApp.getApplication().writeTrip(allTrips);
                 MyApp.setSharedPrefString("HIDE_DRIVERS", tt.getDriver_id() + ",");
                 MyApp.setStatus("IS_ON_TRIP", false);
                 if (MyApp.getStatus(AppConstants.FIRST_OFFER)) {
                     MyApp.setStatus(AppConstants.FIRST_OFFER, false);
                 }
-                BookTripActivity.this.startActivity(new Intent(BookTripActivity.this.getContext(), OnTripActivity.class).putExtra(AppConstants.EXTRA_1, BookTripActivity.this.tripId));
-                BookTripActivity.this.finish();
+                startActivity(new Intent(getContext(), OnTripActivity.class).putExtra(AppConstants.EXTRA_1, tripId));
+                finish();
             } else if (intent.getStringExtra("TYPE").equals("TRIP_DECLINED")) {
                 driverRequestMethod();
                 handler.removeCallbacks(driverRequestRunnable);
@@ -188,8 +188,8 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
         @Override
         public void run() {
             {
-                if (!BookTripActivity.this.isDriverSearched) {
-                    BookTripActivity.this.driverRequestMethod();
+                if (!isDriverSearched) {
+                    driverRequestMethod();
                 }
             }
         }
@@ -203,8 +203,8 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
             }
 
             public void run() {
-                if (!BookTripActivity.this.isDriverSearched) {
-                    BookTripActivity.this.driverRequestMethod();
+                if (!isDriverSearched) {
+                    driverRequestMethod();
                 }
             }
         }
@@ -215,7 +215,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
 
         public void onSuccess(int statusCode, Header[] headers, String response) {
             Log.d("Response:", response.toString());
-            if (BookTripActivity.this.driversIterator.hasNext() && !BookTripActivity.this.isDriverSearched) {
+            if (driversIterator.hasNext() && !isDriverSearched) {
                 handler.postDelayed(driverRequestRunnable, 20000);
             }
         }
@@ -223,7 +223,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
             if (statusCode != 0) {
                 try {
-                    if (!BookTripActivity.this.isDriverSearched) {
+                    if (!isDriverSearched) {
                         new Handler().postDelayed(new C05662(), 20000);
                     }
                 } catch (Exception e) {
@@ -236,19 +236,19 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
         super.onCreate(arg0);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.book_trip);
-        this.toolbar_title = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(this.toolbar_title);
+        toolbar_title = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar_title);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        ((TextView) this.toolbar_title.findViewById(R.id.toolbar_title)).setText("Booking Details");
+        ((TextView) toolbar_title.findViewById(R.id.toolbar_title)).setText("Booking Details");
         setResponseListener(this);
-        this.editText = (ContactsEditText) findViewById(android.R.id.input);
-        this.editText.setText(MyApp.getApplication().readUser().getU_mobile());
-        this.editText.setOnItemClickListener(new C05601());
-        this.currentTruck = SingleInstance.getInstance().getSelectedRate();
-        this.pickupTime = getIntent().getStringExtra("PickUpTime");
+        editText = (ContactsEditText) findViewById(android.R.id.input);
+        editText.setText(MyApp.getApplication().readUser().getU_mobile());
+        editText.setOnItemClickListener(new C05601());
+        currentTruck = SingleInstance.getInstance().getSelectedRate();
+        pickupTime = getIntent().getStringExtra("PickUpTime");
         setUpUiElements();
         loadTodaysHistory();
 
@@ -262,57 +262,57 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
     }
 
     private void setUpUiElements() {
-        this.radio_group = (RadioGroup) findViewById(R.id.radio_group);
-        this.edt_qty_goods = (EditText) findViewById(R.id.edt_qty_goods);
-        this.vehicle = (TextView) findViewById(R.id.vehicle);
-        this.txt_apply_coupon = (TextView) findViewById(R.id.txt_apply_coupon);
-        this.btn_confirmString = (Button) findViewById(R.id.btn_confirmString);
-        this.txt_destination = (TextView) findViewById(R.id.txt_destination);
-        this.txt_source = (TextView) findViewById(R.id.txt_source);
-        this.txt_amount = (TextView) findViewById(R.id.txt_amount);
-        this.edt_goods = (EditText) findViewById(R.id.edt_goods);
-        this.check_cash = (ImageView) findViewById(R.id.check_cash);
-        this.check_paytm = (ImageView) findViewById(R.id.check_paytm);
-        this.rl_paytm = (RelativeLayout) findViewById(R.id.rl_paytm);
-        this.rl_cash = (RelativeLayout) findViewById(R.id.rl_cash);
-        this.txt_estimate_time = (TextView) findViewById(R.id.txt_estimate_time);
-        this.vehicle.setText(this.currentTruck.getCar_name());
-        this.txt_estimate_time.setText("ETA : " + getIntent().getStringExtra("ETA") + " Min");
-        this.txt_amount.setText(getIntent().getStringExtra("PRICE"));
-        this.txt_source.setText(getIntent().getStringExtra(AppConstants.EXTRA_1));
-        this.txt_destination.setText(getIntent().getStringExtra(AppConstants.EXTRA_2));
+        radio_group = (RadioGroup) findViewById(R.id.radio_group);
+        edt_qty_goods = (EditText) findViewById(R.id.edt_qty_goods);
+        vehicle = (TextView) findViewById(R.id.vehicle);
+        txt_apply_coupon = (TextView) findViewById(R.id.txt_apply_coupon);
+        btn_confirmString = (Button) findViewById(R.id.btn_confirmString);
+        txt_destination = (TextView) findViewById(R.id.txt_destination);
+        txt_source = (TextView) findViewById(R.id.txt_source);
+        txt_amount = (TextView) findViewById(R.id.txt_amount);
+        edt_goods = (EditText) findViewById(R.id.edt_goods);
+        check_cash = (ImageView) findViewById(R.id.check_cash);
+        check_paytm = (ImageView) findViewById(R.id.check_paytm);
+        rl_paytm = (RelativeLayout) findViewById(R.id.rl_paytm);
+        rl_cash = (RelativeLayout) findViewById(R.id.rl_cash);
+        txt_estimate_time = (TextView) findViewById(R.id.txt_estimate_time);
+        vehicle.setText(currentTruck.getCar_name());
+        txt_estimate_time.setText("ETA : " + getIntent().getStringExtra("ETA") + " Min");
+        txt_amount.setText(getIntent().getStringExtra("PRICE"));
+        txt_source.setText(getIntent().getStringExtra(AppConstants.EXTRA_1));
+        txt_destination.setText(getIntent().getStringExtra(AppConstants.EXTRA_2));
         setTouchNClick(R.id.btn_confirmString);
         setTouchNClick(R.id.txt_apply_coupon);
         setTouchNClick(R.id.rl_paytm);
         setTouchNClick(R.id.rl_cash);
-        this.loader = (PageLoader) findViewById(R.id.pageloader);
-        this.loader.setLoadingImageHeight(200);
-        this.loader.setLoadingImageWidth(200);
-        this.loader.setTextSize(20);
-        this.radio_group.setOnCheckedChangeListener(new C05612());
+        loader = (PageLoader) findViewById(R.id.pageloader);
+        loader.setLoadingImageHeight(200);
+        loader.setLoadingImageWidth(200);
+        loader.setTextSize(20);
+        radio_group.setOnCheckedChangeListener(new C05612());
     }
 
     public void onClick(View v) {
         super.onClick(v);
-        if (v == this.rl_paytm) {
-            this.check_paytm.setImageResource(R.drawable.btn_checked);
-            this.check_cash.setImageResource(R.drawable.btn_unchecked);
-            this.payMode = "PAYTM";
-        } else if (v == this.rl_cash) {
-            this.check_cash.setImageResource(R.drawable.btn_checked);
-            this.check_paytm.setImageResource(R.drawable.btn_unchecked);
-            this.payMode = "CASH";
+        if (v == rl_paytm) {
+            check_paytm.setImageResource(R.drawable.btn_checked);
+            check_cash.setImageResource(R.drawable.btn_unchecked);
+            payMode = "PAYTM";
+        } else if (v == rl_cash) {
+            check_cash.setImageResource(R.drawable.btn_checked);
+            check_paytm.setImageResource(R.drawable.btn_unchecked);
+            payMode = "CASH";
         } else if (v.getId() == R.id.btn_confirmString) {
             requestTrip();
-        } else if (v == this.txt_apply_coupon) {
+        } else if (v == txt_apply_coupon) {
             Builder b = new Builder(getContext());
             b.setTitle("Apply Coupon!");
-            if (this.message.equals("GO")) {
+            if (message.equals("GO")) {
                 b.setMessage("To get 5% discount on your next trip, use coupon code\n'FLOTER05'");
                 b.setPositiveButton("APPLY", new C05623());
                 b.setNegativeButton("CANCEL", new C05634());
             } else {
-                b.setMessage(this.message);
+                b.setMessage(message);
                 b.setPositiveButton("OK", new C05645());
             }
             b.create().show();
@@ -327,25 +327,25 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
     }
 
     private void requestTrip() {
-        if (TextUtils.isEmpty(this.edt_goods.getText().toString())) {
-            this.edt_goods.setError("Enter goods type");
+        if (TextUtils.isEmpty(edt_goods.getText().toString())) {
+            edt_goods.setError("Enter goods type");
             MyApp.showMassage(getContext(), "Write down goods type that you want to carry");
-        } else if (!this.isGoodsSet) {
+        } else if (!isGoodsSet) {
             MyApp.showMassage(getContext(), "Please enter some quantity");
-        } else if (this.isQtySet && TextUtils.isEmpty(this.edt_qty_goods.getText().toString())) {
+        } else if (isQtySet && TextUtils.isEmpty(edt_qty_goods.getText().toString())) {
             MyApp.showMassage(getContext(), "Please enter some quantity");
         } else {
             User u = MyApp.getApplication().readUser();
             RequestParams p = new RequestParams();
             p.put("trip_date", MyApp.millsToDate2(System.currentTimeMillis()));
             p.put("user_id", u.getUser_id());
-            p.put("trip_from_loc", this.txt_source.getText().toString());
-            p.put("trip_to_loc", this.txt_destination.getText().toString());
+            p.put("trip_from_loc", txt_source.getText().toString());
+            p.put("trip_to_loc", txt_destination.getText().toString());
             p.put("trip_distance", getIntent().getStringExtra("DISTANCE"));
             p.put("trip_fare", getIntent().getStringExtra("EST_PRICE"));
             p.put("trip_wait_time", getIntent().getStringExtra("ETA"));
-            p.put("trip_pickup_time", this.pickupTime);
-            p.put("later_booking_time", this.pickupTime);
+            p.put("trip_pickup_time", pickupTime);
+            p.put("later_booking_time", pickupTime);
             p.put("trip_drop_time", getIntent().getStringExtra("DURATION"));
             p.put("trip_reason", "");
             p.put("trip_feedback", "");
@@ -360,15 +360,15 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
             p.put("trip_scheduled_drop_lng", Double.valueOf(d.longitude));
             p.put("trip_actual_drop_lat", Double.valueOf(d.latitude));
             p.put("trip_actual_drop_lng", Double.valueOf(d.longitude));
-            p.put("trip_pay_mode", this.payMode);
+            p.put("trip_pay_mode", payMode);
             p.put("trip_pay_amount", getIntent().getStringExtra("EST_PRICE"));
             p.put("trip_pay_date", MyApp.getDateOrTimeFromMillis(Long.valueOf(System.currentTimeMillis())));
             p.put("trip_pay_status", "PENDING");
             p.put("trip_driver_commision", "");
-            if (TextUtils.isEmpty(this.edt_qty_goods.getText().toString())) {
-                p.put("goods_type", this.edt_goods.getText().toString() + " (Loose)");
+            if (TextUtils.isEmpty(edt_qty_goods.getText().toString())) {
+                p.put("goods_type", edt_goods.getText().toString() + " (Loose)");
             } else {
-                p.put("goods_type", this.edt_goods.getText().toString() + " (" + this.edt_qty_goods.getText().toString() + "Kg)");
+                p.put("goods_type", edt_goods.getText().toString() + " (" + edt_qty_goods.getText().toString() + "Kg)");
             }
             if (getIntent().getBooleanExtra("isBookLater", false)) {
                 p.put("driver_id", "91");
@@ -380,7 +380,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
             p.put("promo_id", "");
             p.put("trip_promo_code", "");
             p.put("trip_promo_amt", "0");
-            if (this.isCouponValid) {
+            if (isCouponValid) {
                 p.put("promo_id", "5");
                 p.put("trip_promo_code", "FLOTER05");
                 p.put("trip_promo_amt", 5);
@@ -414,14 +414,14 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
         } else if (callNumber == 2 && o.optString("status").equals("OK")) {
             try {
                 Trip trip = new Gson().fromJson(o.getJSONObject("response").toString(), Trip.class);
-                this.tripId = trip.getTrip_id();
+                tripId = trip.getTrip_id();
                 HashMap<String, Trip> map = MyApp.getApplication().readTrip();
-                map.put(this.tripId, trip);
+                map.put(tripId, trip);
                 MyApp.getApplication().writeTrip(map);
                 if (getIntent().getBooleanExtra("isBookLater", false)) {
                     MyApp.popMessageAndFinish("Message", "Your request has been sent to Floter team. We will notify you after assigning a Driver for your trip.\nThank you.", this);
-                } else if (this.driversIterator == null) {
-                    this.driversIterator = SingleInstance.getInstance().getNotifiableDrivers().iterator();
+                } else if (driversIterator == null) {
+                    driversIterator = SingleInstance.getInstance().getNotifiableDrivers().iterator();
                     driverRequestMethod();
                 }
             } catch (Exception e) {
@@ -430,9 +430,9 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
             Trip trip = null;
             try {
                 trip = new Gson().fromJson(o.getJSONObject("response").toString(), Trip.class);
-                this.tripId = trip.getTrip_id();
+                tripId = trip.getTrip_id();
                 HashMap<String, Trip> map = MyApp.getApplication().readTrip();
-                map.put(this.tripId, trip);
+                map.put(tripId, trip);
                 MyApp.getApplication().writeTrip(map);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -450,20 +450,20 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
                         int ref = count / 3;
                         int rem = count % 3;
                         if (count >= 3 && ref >= 1 && rem == 0) {
-                            this.message = "GO";
+                            message = "GO";
                         } else {
-                            this.message = "Coupon will be applicable after every 3rd ride, make sure" +
+                            message = "Coupon will be applicable after every 3rd ride, make sure" +
                                     "you have complete 3 rides and try to use the coupon. For reference the discount will be" +
                                     " allowed for 4th, 7th, 11th ride for the same day.\nThank you!";
                         }
                     }
                     return;
                 } catch (JSONException e2) {
-                    this.message = "Please complete 3 rides for the day and you will be applicable to apply the offer.\nThank you!";
+                    message = "Please complete 3 rides for the day and you will be applicable to apply the offer.\nThank you!";
                     e2.printStackTrace();
                     return;
                 } catch (Exception e3) {
-                    this.message = "Please complete 3 rides for the day and you will be applicable to apply the offer.\nThank you!";
+                    message = "Please complete 3 rides for the day and you will be applicable to apply the offer.\nThank you!";
                     e3.printStackTrace();
                     return;
                 }
@@ -484,19 +484,23 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
 
     private void driverRequestMethod() {
         try {
-            if (this.driversIterator.hasNext()) {
-                Response nd = this.driversIterator.next();
+            if (driversIterator.hasNext()) {
+                Response nd = driversIterator.next();
+                if(nd.getD_is_verified().equals("0")){
+                    driverRequestMethod();
+                    return;
+                }
                 RequestParams p1 = new RequestParams();
-                p1.put("trip_id", this.tripId);
+                p1.put("trip_id", tripId);
                 p1.put("trip_status", TripStatus.Pending.name());
                 p1.put("driver_id", nd.getDriver_id());
                 postCall(getContext(), AppConstants.BASE_URL_TRIP + "updatetrip", p1, "", 3);
-                this.btn_confirmString.setVisibility(View.GONE);
-                this.loader.startProgress();
-                this.loader.setVisibility(View.VISIBLE);
+                btn_confirmString.setVisibility(View.GONE);
+                loader.startProgress();
+                loader.setVisibility(View.VISIBLE);
                 RequestParams p = new RequestParams();
                 p.put("message", "New Trip");
-                p.put("trip_id", this.tripId);
+                p.put("trip_id", tripId);
                 p.put("trip_status", TripStatus.Pending.name());
                 p.put("android", nd.getD_device_token());
                 JSONObject jo = new JSONObject();
@@ -507,16 +511,16 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
                 LatLng d = SingleInstance.getInstance().getDestinationLatLng();
                 jo.put("dest_lat", d.latitude);
                 jo.put("dest_lng", d.longitude);
-                if (TextUtils.isEmpty(this.edt_qty_goods.getText().toString())) {
-                    jo.put("goods_type", this.edt_goods.getText().toString() + " (Loose)");
+                if (TextUtils.isEmpty(edt_qty_goods.getText().toString())) {
+                    jo.put("goods_type", edt_goods.getText().toString() + " (Loose)");
                 } else {
-                    jo.put("goods_type", this.edt_goods.getText().toString() + " (" + this.edt_qty_goods.getText().toString() + ")");
+                    jo.put("goods_type", edt_goods.getText().toString() + " (" + edt_qty_goods.getText().toString() + ")");
                 }
                 jo.put("est_amount", getIntent().getStringExtra("EST_PRICE"));
                 jo.put("token", MyApp.getSharedPrefString(AppConstants.DEVICE_TOKEN));
-                jo.put("contact", this.editText.getText().toString());
-                jo.put("dest_address", this.txt_destination.getText().toString());
-                jo.put("source_address", this.txt_source.getText().toString());
+                jo.put("contact", editText.getText().toString());
+                jo.put("dest_address", txt_destination.getText().toString());
+                jo.put("source_address", txt_source.getText().toString());
                 jo.put("u_rating", "4.0");
                 jo.put("timestamp", System.currentTimeMillis());
                 p.put("object", jo.toString());
@@ -547,19 +551,19 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (MyApp.getStatus("IS_ON_TRIP")) {
-            unregisterReceiver(this.receiver);
+            unregisterReceiver(receiver);
             MyApp.setStatus("IS_ON_TRIP", false);
             HashMap<String, Trip> allTrips = MyApp.getApplication().readTrip();
             try {
-                Trip tt = allTrips.get(this.tripId);
+                Trip tt = allTrips.get(tripId);
                 tt.setTrip_status(TripStatus.Accepted.name());
-                allTrips.put(this.tripId, tt);
+                allTrips.put(tripId, tt);
                 MyApp.getApplication().writeTrip(allTrips);
                 if (MyApp.getStatus(AppConstants.FIRST_OFFER)) {
                     MyApp.setStatus(AppConstants.FIRST_OFFER, false);
                 }
                 isDriverSearched = true;
-                startActivity(new Intent(getContext(), OnTripActivity.class).putExtra(AppConstants.EXTRA_1, this.tripId));
+                startActivity(new Intent(getContext(), OnTripActivity.class).putExtra(AppConstants.EXTRA_1, tripId));
                 finish();
             } catch (Exception e) {
             }
@@ -567,7 +571,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
     }
 
     protected void onResume() {
-        registerReceiver(this.receiver, this.filter);
+        registerReceiver(receiver, filter);
         super.onResume();
         if (ContextCompat.checkSelfPermission(getContext(), "android.permission.READ_CONTACTS") == -1) {
             ActivityCompat.requestPermissions(this, new String[]{"android.permission.READ_CONTACTS"}, 1010);
@@ -577,7 +581,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
     public void onDestroy() {
         super.onDestroy();
         try {
-            unregisterReceiver(this.receiver);
+            unregisterReceiver(receiver);
         } catch (Exception e) {
         }
 

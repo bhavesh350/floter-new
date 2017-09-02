@@ -172,7 +172,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dim_5"
                         android:layout_toRightOf="@+id/driver_label"
-                        android:text="Ashok"
                         android:textColor="@color/black"
                         android:textSize="@dimen/dim_20"
                         android:textStyle="bold" />
@@ -286,6 +285,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/dim_18" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -59,7 +59,7 @@ public class HistoryDetailsActivity extends CustomActivity {
         payment_mode.setText(t.getTrip_pay_mode());
         address_src.setText(t.getTrip_from_loc());
         address_dest.setText(t.getTrip_to_loc());
-        user_name.setText(t.getUser().getU_fname() + " " + t.getUser().getU_lname());
+        user_name.setText(t.getDriver().getD_name());
         float tripFare = Integer.parseInt(t.getTrip_pay_amount());
         int gst = (int) (tripFare * 0.05f);
 //        BigDecimal gstB = MyApp.roundFloat(gst, 2);

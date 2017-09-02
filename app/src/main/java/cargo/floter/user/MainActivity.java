@@ -486,6 +486,8 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                 isShownNoDriverDialog = false;
             }
         }, 2000);
+
+        Log.d("DeviceToken", "" + MyApp.getSharedPrefString(AppConstants.DEVICE_TOKEN));
     }
 
     private void showFirstOfferDialog() {
@@ -742,7 +744,8 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                     place = SingleInstance.getInstance().getSelectedPlace();
                     this.sourceLocation = place.getLatLng();
                     Log.i("", "Place: " + place.getName());
-                    if (place.getAddress().toString().contains("Odisha") || place.getAddress().toString().contains("Delhi")) {
+                    if (place.getAddress().toString().contains("Odisha") || place.getAddress().toString().contains("Delhi")
+                            || place.getAddress().toString().contains("Jodhpur")) {
                         this.mLocationText.setText(place.getAddress().toString().replace("\n", " "));
                         this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder().target(place.getLatLng()).zoom(15.5f).tilt(0.0f).build()));
                         getNearbyDrivers(place.getLatLng().latitude + "", place.getLatLng().longitude + "");
@@ -763,7 +766,8 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                     Log.i("", "Place: " + place.getAddress());
                     this.destinationLocation = place.getLatLng();
                     this.destinationString = place.getAddress().toString();
-                    if (place.getAddress().toString().contains("Odisha") || place.getAddress().toString().contains("Delhi")) {
+                    if (place.getAddress().toString().contains("Odisha") || place.getAddress().toString().contains("Delhi")
+                            || place.getAddress().toString().contains("Jodhpur")) {
                         String url = getMapsApiDirectionsUrl(new LatLng(this.sourceLocation.latitude, this.sourceLocation.longitude), new LatLng(this.destinationLocation.latitude, this.destinationLocation.longitude));
                         new ReadTask().execute(new String[]{url});
                         MyApp.spinnerStart(getContext(), "Please wait...");
@@ -931,8 +935,10 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         this.txt_name_truck.setText(this.truckNames[index]);
     }
 
+    private String lastAddress = "";
+
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
-        getNearbyDrivers(LATITUDE + "", LONGITUDE + "");
+
         String strAdd = "";
         try {
             List<Address> addresses = new Geocoder(this, Locale.getDefault()).getFromLocation(LATITUDE, LONGITUDE, 1);
@@ -943,9 +949,14 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                     strReturnedAddress.append(returnedAddress.getAddressLine(i)).append(", ");
                 }
                 strAdd = strReturnedAddress.toString();
-                if (returnedAddress.getAdminArea().equals("Odisha") || returnedAddress.getAdminArea().equals("Delhi")) {
+                if (!lastAddress.equals(strAdd)) {
+                    getNearbyDrivers(LATITUDE + "", LONGITUDE + "");
+                }
+                lastAddress = strAdd;
+                Log.w("address", "" + strAdd);
+                if (returnedAddress.getAdminArea().equals("Odisha") || returnedAddress.getAdminArea().equals("Delhi")
+                        || returnedAddress.getAdminArea().contains("Rajasthan")) {
                     this.mLocationText.setText(strReturnedAddress.toString());
-                    Log.w("address", "" + strReturnedAddress.toString());
                     return strAdd;
                 } else {
                     strAdd = "";
