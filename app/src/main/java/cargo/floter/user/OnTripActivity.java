@@ -497,7 +497,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
         setClick(R.id.txt_cancel_trip);
         try {
             txt_user_name.setText(currentTrip.getDriver().getD_name());
-            txt_driver_name.setText(currentTrip.getDriver().getD_name() + "\n" + currentTrip.getDriver().getTruck_reg_no());
+//            txt_driver_name.setText(currentTrip.getDriver().getD_name() + "\n" + currentTrip.getDriver().getTruck_reg_no());
             slideUp = new Builder(ll_feedback).withStartState(State.HIDDEN).withStartGravity(80).build();
             slideUp = new Builder(ll_feedback).withListeners(new C09612()).withStartGravity(80).withGesturesEnabled(false).withStartState(State.HIDDEN).build();
             rating_bar.setOnRatingBarChangeListener(new C05873());
@@ -695,13 +695,14 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
 
         if (o.optString("status").equals("OK") && callNumber == 15) {
             try {
-                Trip t = (Trip) new Gson().fromJson(o.getJSONArray("response").getJSONObject(0).toString(), Trip.class);
+                Trip t = new Gson().fromJson(o.getJSONArray("response").getJSONObject(0).toString(), Trip.class);
                 newlat = Double.parseDouble(t.getDriver().getD_lat());
                 newlong = Double.parseDouble(t.getDriver().getD_lng());
                 if (t != null) {
                     HashMap<String, Trip> map = MyApp.getApplication().readTrip();
                     map.put(tripId, t);
                     MyApp.getApplication().writeTrip(map);
+                    txt_driver_name.setText(t.getDriver().getD_name() + "\n" + t.getDriver().getTruck_reg_no());
                 }
                 if (!(!t.getTrip_status().equals(TripStatus.Finished.name()) || t.getFloter_id().equals("0") || isTripFinished)) {
                     isTripFinished = true;

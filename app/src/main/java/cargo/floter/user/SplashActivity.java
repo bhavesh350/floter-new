@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,11 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
@@ -30,6 +36,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import cargo.floter.user.model.Version;
 import cargo.floter.user.utils.AppConstants;
 import cz.msebera.android.httpclient.Header;
 
@@ -153,12 +160,60 @@ public class SplashActivity extends CustomActivity {
         public void run() {
             if (!isFinishing()) {
                 mHandler.removeCallbacks(this);
+                FirebaseDatabase mFirebaseInstance = FirebaseDatabase.getInstance();
+                mFirebaseInstance.getReference("user").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // whenever data at this location is updated.
+                        String value = dataSnapshot.getValue(String.class);
+                        PackageManager manager = getPackageManager();
+                        PackageInfo info = null;
+                        try {
+                            info = manager.getPackageInfo(
+                                    getPackageName(), 0);
+                            String version = info.versionCode + "";
+                            if (version.equals(value)) {
+                                startActivity(new Intent(
+                                        SplashActivity.this, LoginActivity.class
+                                ));
+                                finish();
+                            } else {
+                                AlertDialog.Builder b = new AlertDialog.Builder(SplashActivity.this);
+                                b.setTitle("Update App");
+                                b.setMessage("New version is available of the app, please update the app first to use" +
+                                        " improved and better features of the app." +
+                                        "\nThank you.")
+                                        .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface d, int which) {
+                                                d.dismiss();
+                                                startActivity(new Intent(
+                                                        Intent.ACTION_VIEW,
+                                                        Uri.parse("http://play.google.com/store/apps/details?id="
+                                                                + getPackageName())));
+                                                finish();
+                                            }
+                                        }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface d, int which) {
+                                        d.dismiss();
+                                        finish();
+                                    }
+                                }).create().show();
+                            }
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
 
-                startActivity(new Intent(
-                        SplashActivity.this, LoginActivity.class
-                ));
+                        Log.d("myRef", "Value is: " + value);
+                    }
 
-                finish();
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.w("myRef", "Failed to read value.", error.toException());
+                    }
+                });
+
             }
         }
 

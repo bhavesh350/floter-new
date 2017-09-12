@@ -144,9 +144,9 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         }
 
         public void onClick(View view) {
-            Intent intent = new Intent(MainActivity.this.getContext(), SearchActivity.class);
+            Intent intent = new Intent(getContext(), SearchActivity.class);
             intent.putExtra(AppConstants.EXTRA_1, "Enter pickup location");
-            MainActivity.this.startActivityForResult(intent, 122);
+            startActivityForResult(intent, 122);
             isGoingToChangeCurrentLocation = true;
         }
     }
@@ -156,7 +156,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         }
 
         public void onClick(View view) {
-            MainActivity.this.slideUp.hideImmediately();
+            slideUp.hideImmediately();
         }
     }
 
@@ -165,7 +165,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         }
 
         public void onClick(View view) {
-            MainActivity.this.slideUp.show();
+            slideUp.show();
         }
     }
 
@@ -174,7 +174,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         }
 
         public void onClick(View view) {
-            MainActivity.this.slideUp.hide();
+            slideUp.hide();
         }
     }
 
@@ -183,9 +183,9 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         }
 
         public void run() {
-            if (MainActivity.this.sourceLocation == null) {
-                MainActivity.this.locationProvider = new LocationProvider(MainActivity.this, MainActivity.this, MainActivity.this);
-                MainActivity.this.locationProvider.connect();
+            if (sourceLocation == null) {
+                locationProvider = new LocationProvider(MainActivity.this, MainActivity.this, MainActivity.this);
+                locationProvider.connect();
             }
         }
     }
@@ -246,25 +246,33 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                 for (int j = 0; j < path.size(); j++) {
                     HashMap<String, String> point = (HashMap) path.get(j);
                     if (j == 0) {
-                        distance = (String) point.get("distance");
+                        distance = point.get("distance");
                     } else if (j == 1) {
-                        duration = (String) point.get("duration");
+                        duration = point.get("duration");
                     } else {
-                        points.add(new LatLng(Double.parseDouble((String) point.get("lat")), Double.parseDouble((String) point.get("lng"))));
+                        points.add(new LatLng(Double.parseDouble(point.get("lat")), Double.parseDouble((String) point.get("lng"))));
                     }
                 }
             }
             MyApp.spinnerStop();
             RateCardResponse r = SingleInstance.getInstance().getSelectedRate();
-            float f = 0.0f;
+            double f = 0.0f;
             try {
                 f = Float.parseFloat(distance) / 1000.0f;
                 f = ((float) Math.round(100.0f * f)) / 100.0f;
             } catch (Exception e) {
             }
+
+            if (f == 0) {
+                f = (float) MyApp.distance(sourceLocation.latitude, sourceLocation.longitude
+                        , destinationLocation.latitude, destinationLocation.longitude);
+            }
+
             if (f < 3.0f) {
                 f = 2.0f;
             }
+
+
             try {
                 estimatedTime = Integer.parseInt(duration);
             } catch (Exception e2) {
@@ -294,14 +302,14 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             if (charge > 660) {
                 charge = charge - 50;
             }
-            SingleInstance.getInstance().setSourceLatLng(MainActivity.this.sourceLocation);
-            SingleInstance.getInstance().setDestinationLatLng(MainActivity.this.destinationLocation);
-            MainActivity.this.startActivity(new Intent(MainActivity.this, BookTripActivity.class)
-                    .putExtra(AppConstants.EXTRA_1, MainActivity.this.mLocationText.getText().toString())
-                    .putExtra(AppConstants.EXTRA_2, MainActivity.this.destinationString)
-                    .putExtra("ETA", MainActivity.this.ETA)
-                    .putExtra("isBookLater", MainActivity.this.isBookLater)
-                    .putExtra("PickUpTime", MainActivity.this.pickupTime)
+            SingleInstance.getInstance().setSourceLatLng(sourceLocation);
+            SingleInstance.getInstance().setDestinationLatLng(destinationLocation);
+            startActivity(new Intent(MainActivity.this, BookTripActivity.class)
+                    .putExtra(AppConstants.EXTRA_1, mLocationText.getText().toString())
+                    .putExtra(AppConstants.EXTRA_2, destinationString)
+                    .putExtra("ETA", ETA)
+                    .putExtra("isBookLater", isBookLater)
+                    .putExtra("PickUpTime", pickupTime)
                     .putExtra("DURATION", estimatedTime + "")
                     .putExtra("DISTANCE", f + "")
                     .putExtra("EST_PRICE", charge + "")
@@ -425,56 +433,56 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(this.mToolbar);
-        this.locationProvider = new LocationProvider(this, this, this);
-        this.mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        locationProvider = new LocationProvider(this, this, this);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         setResponseListener(this);
-        this.base_price = (TextView) findViewById(R.id.base_price);
-        this.per_km_price = (TextView) findViewById(R.id.per_km_price);
-        this.per_min_price = (TextView) findViewById(R.id.per_min_price);
-        this.pay_load = (TextView) findViewById(R.id.pay_load);
-        this.mLocationText = (TextView) findViewById(R.id.Locality);
-        this.locMarkertext = (TextView) findViewById(R.id.locMarkertext);
-        this.dimension = (TextView) findViewById(R.id.dimension);
-        this.img_selected_truck = (ImageView) findViewById(R.id.img_selected_truck);
-        this.txt_name_truck = (TextView) findViewById(R.id.txt_name_truck);
-        this.click_truck = (RelativeLayout) findViewById(R.id.click_truck);
-        this.ll_info = (RelativeLayout) findViewById(R.id.ll_info);
-        this.mapFragment.getMapAsync(this);
+        base_price = (TextView) findViewById(R.id.base_price);
+        per_km_price = (TextView) findViewById(R.id.per_km_price);
+        per_min_price = (TextView) findViewById(R.id.per_min_price);
+        pay_load = (TextView) findViewById(R.id.pay_load);
+        mLocationText = (TextView) findViewById(R.id.Locality);
+        locMarkertext = (TextView) findViewById(R.id.locMarkertext);
+        dimension = (TextView) findViewById(R.id.dimension);
+        img_selected_truck = (ImageView) findViewById(R.id.img_selected_truck);
+        txt_name_truck = (TextView) findViewById(R.id.txt_name_truck);
+        click_truck = (RelativeLayout) findViewById(R.id.click_truck);
+        ll_info = (RelativeLayout) findViewById(R.id.ll_info);
+        mapFragment.getMapAsync(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         HorizontalPicker picker = (HorizontalPicker) findViewById(R.id.picker);
         picker.setOnItemClickedListener(this);
         picker.setOnItemSelectedListener(this);
-        this.truckImages = getResources().obtainTypedArray(R.array.truckIconsActive);
-        this.truckNames = getResources().getStringArray(R.array.truck_names);
-        this.locMarkertext.setText("Searching Drivers...");
-        this.currentBookText = "Searching Drivers...";
-        this.rateCard = MyApp.getApplication().readRateCard();
-        for (int i = 0; i < this.rateCard.getResponse().size(); i++) {
-            this.f25r.put((this.rateCard.getResponse().get(i)).getCar_name(), this.rateCard.getResponse().get(i));
+        truckImages = getResources().obtainTypedArray(R.array.truckIconsActive);
+        truckNames = getResources().getStringArray(R.array.truck_names);
+        locMarkertext.setText("Searching Drivers...");
+        currentBookText = "Searching Drivers...";
+        rateCard = MyApp.getApplication().readRateCard();
+        for (int i = 0; i < rateCard.getResponse().size(); i++) {
+            f25r.put((rateCard.getResponse().get(i)).getCar_name(), rateCard.getResponse().get(i));
         }
         try {
-            this.base_price.setText("Rs " + (this.f25r.get("Piaggio Ape")).getBase_fare());
-            this.per_km_price.setText("Rs " + (this.f25r.get("Piaggio Ape")).getPrice_per_km() + "/km");
-            this.per_min_price.setText("Rs " + (this.f25r.get("Piaggio Ape")).getCharge_after_free_time() + "/Min after " + (this.f25r.get("Piaggio Ape")).getFree_load_unload_time() + " Min");
-            this.pay_load.setText((this.f25r.get("Piaggio Ape")).getCapacity() + " Kg");
-            this.dimension.setText((this.f25r.get("Piaggio Ape")).getLength() + "x" + (this.f25r.get("Piaggio Ape")).getWidth() + "x" + (this.f25r.get("Piaggio Ape")).getHeight());
+            base_price.setText("Rs " + (f25r.get("Piaggio Ape")).getBase_fare());
+            per_km_price.setText("Rs " + (f25r.get("Piaggio Ape")).getPrice_per_km() + "/km");
+            per_min_price.setText("Rs " + (f25r.get("Piaggio Ape")).getCharge_after_free_time() + "/Min after " + (f25r.get("Piaggio Ape")).getFree_load_unload_time() + " Min");
+            pay_load.setText((f25r.get("Piaggio Ape")).getCapacity() + " Kg");
+            dimension.setText((f25r.get("Piaggio Ape")).getLength() + "x" + (f25r.get("Piaggio Ape")).getWidth() + "x" + (f25r.get("Piaggio Ape")).getHeight());
         } catch (Exception e) {
         }
         actionBar.setTitle("");
-        this.drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        this.drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), this.mToolbar);
-        this.drawerFragment.setDrawerListener(this);
+        drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+        drawerFragment.setDrawerListener(this);
         setupUiElements();
-        this.mLocationText.setOnClickListener(new C05701());
-        this.ll_info.setOnClickListener(new C05712());
-        this.slideUp = new Builder(this.ll_info).withStartState(State.HIDDEN).withStartGravity(80).build();
-        this.slideUp = new Builder(this.ll_info).withListeners(new C09603()).withStartGravity(80).withGesturesEnabled(false).withStartState(State.HIDDEN).build();
-        this.click_truck.setOnClickListener(new C05724());
-        this.ll_info.setOnClickListener(new C05735());
+        mLocationText.setOnClickListener(new C05701());
+        ll_info.setOnClickListener(new C05712());
+        slideUp = new Builder(ll_info).withStartState(State.HIDDEN).withStartGravity(80).build();
+        slideUp = new Builder(ll_info).withListeners(new C09603()).withStartGravity(80).withGesturesEnabled(false).withStartState(State.HIDDEN).build();
+        click_truck.setOnClickListener(new C05724());
+        ll_info.setOnClickListener(new C05735());
         new Handler().postDelayed(new C05746(), 10000);
 
         if (MyApp.getStatus(AppConstants.FIRST_OFFER)) {
@@ -549,9 +557,9 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
 //        txt_pay.setOnClickListener(new OnClickListener() {
 //            public void onClick(View view) {
 //                if (radio_cash.isChecked()) {
-//                    MyApp.showMassage(MainActivity.this.getContext(), "Cash");
+//                    MyApp.showMassage(getContext(), "Cash");
 //                } else {
-//                    MyApp.showMassage(MainActivity.this.getContext(), "Paytm");
+//                    MyApp.showMassage(getContext(), "Paytm");
 //                }
 //                dialog.dismiss();
 //            }
@@ -581,38 +589,38 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == R.id.btn_book_later) {
-            this.currentBookText = this.locMarkertext.getText().toString();
-            this.locMarkertext.setText(" |   Select Time >");
-            this.locMarkertext.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_timer, 0, 0, 0);
-            this.isBookLater = true;
+            currentBookText = locMarkertext.getText().toString();
+            locMarkertext.setText(" |   Select Time >");
+            locMarkertext.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_timer, 0, 0, 0);
+            isBookLater = true;
         } else if (v.getId() == R.id.btn_book) {
-            this.locMarkertext.setText(this.currentBookText);
-            this.isBookLater = false;
-            this.locMarkertext.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            if (this.currentBookText.contains("No Driver")) {
+            locMarkertext.setText(currentBookText);
+            isBookLater = false;
+            locMarkertext.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            if (currentBookText.contains("No Driver")) {
                 MyApp.popMessage("Alert!", "No driver available with the truck selected at this location.\nPlease try with different location or different type of truck.", getContext());
-            } else if (this.hasDriver) {
+            } else if (hasDriver) {
                 Intent intent = new Intent(getContext(), SearchActivity.class);
                 intent.putExtra(AppConstants.EXTRA_1, "Enter drop location");
                 startActivityForResult(intent, 123);
             }
         } else if (v.getId() != R.id.locMarkertext) {
         } else {
-            if (this.isBookLater) {
+            if (isBookLater) {
                 new SingleDateAndTimePickerDialog.Builder(getContext()).curved().mainColor(Color.parseColor("#0E577D")).title("Select Date & Time").listener(new SingleDateAndTimePickerDialog.Listener() {
                     public void onDateSelected(Date date) {
                         if (date.getTime() <= System.currentTimeMillis() + 3600000) {
-                            Snackbar.make(MainActivity.this.findViewById(R.id.btn_book_later), "Pickup time should be at least 60 minutes from the current time", (int) CredentialsApi.CREDENTIAL_PICKER_REQUEST_CODE).show();
+                            Snackbar.make(findViewById(R.id.btn_book_later), "Pickup time should be at least 60 minutes from the current time", (int) CredentialsApi.CREDENTIAL_PICKER_REQUEST_CODE).show();
                             return;
                         }
-                        MainActivity.this.pickupTime = MyApp.millsToDateTime(date.getTime());
-                        Intent intent = new Intent(MainActivity.this.getContext(), SearchActivity.class);
+                        pickupTime = MyApp.millsToDateTime(date.getTime());
+                        Intent intent = new Intent(getContext(), SearchActivity.class);
                         intent.putExtra(AppConstants.EXTRA_1, "Enter drop location");
-                        MainActivity.this.startActivityForResult(intent, 123);
+                        startActivityForResult(intent, 123);
                     }
                 }).display();
-            } else if (this.hasDriver) {
-                this.pickupTime = MyApp.millsToDateTime(System.currentTimeMillis() + ((1000 * Long.parseLong(this.ETA)) * 60));
+            } else if (hasDriver) {
+                pickupTime = MyApp.millsToDateTime(System.currentTimeMillis() + ((1000 * Long.parseLong(ETA)) * 60));
                 Intent intent = new Intent(getContext(), SearchActivity.class);
                 intent.putExtra(AppConstants.EXTRA_1, "Enter drop location");
                 startActivityForResult(intent, 123);
@@ -651,7 +659,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
 
     protected void onStart() {
         super.onStart();
-        this.locationProvider.connect();
+        locationProvider.connect();
     }
 
     protected void onResume() {
@@ -659,8 +667,8 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         if (!MyApp.isLocationEnabled(getContext())) {
             enableGPS();
         }
-//        if (this.sourceLocation != null && this.isFirstSet) {
-//            getNearbyDrivers(this.sourceLocation.latitude + "", this.sourceLocation.longitude + "");
+//        if (sourceLocation != null && isFirstSet) {
+//            getNearbyDrivers(sourceLocation.latitude + "", sourceLocation.longitude + "");
 //        }
         if (MyApp.getSharedPrefString("SHOW_PAY").equals("YES")) {
             startActivity(new Intent(getContext(), FinalPaymentActivity.class));
@@ -673,13 +681,13 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
 
     protected void onStop() {
         super.onStop();
-        this.locationProvider.disconnect();
+        locationProvider.disconnect();
     }
 
     public void onMapReady(GoogleMap googleMap) {
-        this.mMap = googleMap;
-        this.mMap.setOnCameraIdleListener(this);
-        View mapView = this.mapFragment.getView();
+        mMap = googleMap;
+        mMap.setOnCameraIdleListener(this);
+        View mapView = mapFragment.getView();
         View locationButton = ((View) mapView.findViewById(Integer.parseInt(AppEventsConstants.EVENT_PARAM_VALUE_YES)).getParent()).findViewById(Integer.parseInt("2"));
         if (mapView != null && mapView.findViewById(Integer.parseInt(AppEventsConstants.EVENT_PARAM_VALUE_YES)) != null) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
@@ -693,9 +701,9 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
 
     public void onCameraIdle() {
         if (isGoingToChangeCurrentLocation) {
-            this.driversMap = new HashMap();
-            this.currentBookText = "No Drivers...";
-            this.locMarkertext.setText("No Drivers...");
+            driversMap = new HashMap();
+            currentBookText = "No Drivers...";
+            locMarkertext.setText("No Drivers...");
             mMap.clear();
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -705,14 +713,14 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             }, 1000);
             return;
         }
-        Log.d("Camera position change", this.mMap.getCameraPosition() + "");
-        this.mCenterLatLong = this.mMap.getCameraPosition().target;
-        this.sourceLocation = this.mCenterLatLong;
+        Log.d("Camera position change", mMap.getCameraPosition() + "");
+        mCenterLatLong = mMap.getCameraPosition().target;
+        sourceLocation = mCenterLatLong;
         try {
             Location mLocation = new Location("");
-            mLocation.setLatitude(this.mCenterLatLong.latitude);
-            mLocation.setLongitude(this.mCenterLatLong.longitude);
-            getCompleteAddressString(this.mCenterLatLong.latitude, this.mCenterLatLong.longitude);
+            mLocation.setLatitude(mCenterLatLong.latitude);
+            mLocation.setLongitude(mCenterLatLong.longitude);
+            getCompleteAddressString(mCenterLatLong.latitude, mCenterLatLong.longitude);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -742,12 +750,12 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             case 122:
                 if (resultCode == RESULT_OK) {
                     place = SingleInstance.getInstance().getSelectedPlace();
-                    this.sourceLocation = place.getLatLng();
+                    sourceLocation = place.getLatLng();
                     Log.i("", "Place: " + place.getName());
                     if (place.getAddress().toString().contains("Odisha") || place.getAddress().toString().contains("Delhi")
                             || place.getAddress().toString().contains("Jodhpur")) {
-                        this.mLocationText.setText(place.getAddress().toString().replace("\n", " "));
-                        this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder().target(place.getLatLng()).zoom(15.5f).tilt(0.0f).build()));
+                        mLocationText.setText(place.getAddress().toString().replace("\n", " "));
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder().target(place.getLatLng()).zoom(15.5f).tilt(0.0f).build()));
                         getNearbyDrivers(place.getLatLng().latitude + "", place.getLatLng().longitude + "");
                     } else {
                         MyApp.popMessage("Alert!", "Service is not available in your area.\nThis application is restricted to Odisha state only.\nThank you", getContext());
@@ -764,11 +772,13 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                 if (resultCode == -1) {
                     place = SingleInstance.getInstance().getSelectedPlace();
                     Log.i("", "Place: " + place.getAddress());
-                    this.destinationLocation = place.getLatLng();
-                    this.destinationString = place.getAddress().toString();
+                    destinationLocation = place.getLatLng();
+                    destinationString = place.getAddress().toString();
                     if (place.getAddress().toString().contains("Odisha") || place.getAddress().toString().contains("Delhi")
                             || place.getAddress().toString().contains("Jodhpur")) {
-                        String url = getMapsApiDirectionsUrl(new LatLng(this.sourceLocation.latitude, this.sourceLocation.longitude), new LatLng(this.destinationLocation.latitude, this.destinationLocation.longitude));
+
+                        String url = getMapsApiDirectionsUrl(new LatLng(sourceLocation.latitude, sourceLocation.longitude),
+                                new LatLng(destinationLocation.latitude, destinationLocation.longitude));
                         new ReadTask().execute(new String[]{url});
                         MyApp.spinnerStart(getContext(), "Please wait...");
                     } else {
@@ -789,16 +799,16 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
     }
 
     private void changeMap(Location location) {
-        if (this.mMap != null) {
-            this.mMap.getUiSettings().setZoomControlsEnabled(false);
+        if (mMap != null) {
+            mMap.getUiSettings().setZoomControlsEnabled(false);
             CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(location.getLatitude(), location.getLongitude())).zoom(15.5f).tilt(0.0f).build();
             if (ContextCompat.checkSelfPermission(this, "android.permission.ACCESS_FINE_LOCATION") == 0 || ContextCompat.checkSelfPermission(this, "android.permission.ACCESS_COARSE_LOCATION") == 0) {
-                this.mMap.setMyLocationEnabled(true);
+                mMap.setMyLocationEnabled(true);
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{"android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"}, 1010);
             }
-            this.mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             getCompleteAddressString(location.getLatitude(), location.getLongitude());
             return;
         }
@@ -806,85 +816,85 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
     }
 
     public void onItemSelected(int index) {
-        this.selectedTruckIndex = index;
-        this.img_selected_truck.setImageResource(this.truckImages.getResourceId(index, 0));
-        this.txt_name_truck.setText(this.truckNames[index]);
+        selectedTruckIndex = index;
+        img_selected_truck.setImageResource(truckImages.getResourceId(index, 0));
+        txt_name_truck.setText(truckNames[index]);
         if (index == 0) {
-            this.key = "Piaggio Ape";
+            key = "Piaggio Ape";
             try {
-                this.base_price.setText("Rs " + (this.f25r.get("Piaggio Ape")).getBase_fare());
-                this.per_km_price.setText("Rs " + (this.f25r.get("Piaggio Ape")).getPrice_per_km() + "/km");
-                this.per_min_price.setText("Rs " + (this.f25r.get("Piaggio Ape")).getCharge_after_free_time() + "/Min after " + (this.f25r.get("Piaggio Ape")).getFree_load_unload_time() + " Min");
-                this.pay_load.setText((this.f25r.get("Piaggio Ape")).getCapacity() + " Kg");
-                this.dimension.setText((this.f25r.get("Piaggio Ape")).getLength() + "x" + (this.f25r.get("Piaggio Ape")).getWidth() + "x" + (this.f25r.get("Piaggio Ape")).getHeight());
-                SingleInstance.getInstance().setSelectedRate(this.f25r.get("Piaggio Ape"));
+                base_price.setText("Rs " + (f25r.get("Piaggio Ape")).getBase_fare());
+                per_km_price.setText("Rs " + (f25r.get("Piaggio Ape")).getPrice_per_km() + "/km");
+                per_min_price.setText("Rs " + (f25r.get("Piaggio Ape")).getCharge_after_free_time() + "/Min after " + (f25r.get("Piaggio Ape")).getFree_load_unload_time() + " Min");
+                pay_load.setText((f25r.get("Piaggio Ape")).getCapacity() + " Kg");
+                dimension.setText((f25r.get("Piaggio Ape")).getLength() + "x" + (f25r.get("Piaggio Ape")).getWidth() + "x" + (f25r.get("Piaggio Ape")).getHeight());
+                SingleInstance.getInstance().setSelectedRate(f25r.get("Piaggio Ape"));
             } catch (Exception e) {
             }
         } else if (index == 1) {
-            this.key = "Tata Ace";
-            this.base_price.setText("Rs " + (this.f25r.get("Tata Ace")).getBase_fare());
-            this.per_km_price.setText("Rs " + (this.f25r.get("Tata Ace")).getPrice_per_km() + "/km");
-            this.per_min_price.setText("Rs " + (this.f25r.get("Tata Ace")).getCharge_after_free_time() + "/Min after " + (this.f25r.get("Tata Ace")).getFree_load_unload_time() + " Min");
-            this.pay_load.setText((this.f25r.get("Tata Ace")).getCapacity() + " Kg");
-            this.dimension.setText((this.f25r.get("Tata Ace")).getLength() + "x" + (this.f25r.get("Tata Ace")).getWidth() + "x" + (this.f25r.get("Tata Ace")).getHeight());
-            SingleInstance.getInstance().setSelectedRate(this.f25r.get("Tata Ace"));
+            key = "Tata Ace";
+            base_price.setText("Rs " + (f25r.get("Tata Ace")).getBase_fare());
+            per_km_price.setText("Rs " + (f25r.get("Tata Ace")).getPrice_per_km() + "/km");
+            per_min_price.setText("Rs " + (f25r.get("Tata Ace")).getCharge_after_free_time() + "/Min after " + (f25r.get("Tata Ace")).getFree_load_unload_time() + " Min");
+            pay_load.setText((f25r.get("Tata Ace")).getCapacity() + " Kg");
+            dimension.setText((f25r.get("Tata Ace")).getLength() + "x" + (f25r.get("Tata Ace")).getWidth() + "x" + (f25r.get("Tata Ace")).getHeight());
+            SingleInstance.getInstance().setSelectedRate(f25r.get("Tata Ace"));
         } else if (index == 2) {
-            this.key = "Tata Super Ace";
-            this.base_price.setText("Rs " + (this.f25r.get("Tata Super Ace")).getBase_fare());
-            this.per_km_price.setText("Rs " + (this.f25r.get("Tata Super Ace")).getPrice_per_km() + "/km");
-            this.per_min_price.setText("Rs " + (this.f25r.get("Tata Super Ace")).getCharge_after_free_time() + "/Min after " + (this.f25r.get("Tata Super Ace")).getFree_load_unload_time() + " Min");
-            this.pay_load.setText((this.f25r.get("Tata Super Ace")).getCapacity() + " Kg");
-            this.dimension.setText((this.f25r.get("Tata Super Ace")).getLength() + "x" + (this.f25r.get("Tata Super Ace")).getWidth() + "x" + (this.f25r.get("Tata Super Ace")).getHeight());
-            SingleInstance.getInstance().setSelectedRate(this.f25r.get("Tata Super Ace"));
+            key = "Tata Super Ace";
+            base_price.setText("Rs " + (f25r.get("Tata Super Ace")).getBase_fare());
+            per_km_price.setText("Rs " + (f25r.get("Tata Super Ace")).getPrice_per_km() + "/km");
+            per_min_price.setText("Rs " + (f25r.get("Tata Super Ace")).getCharge_after_free_time() + "/Min after " + (f25r.get("Tata Super Ace")).getFree_load_unload_time() + " Min");
+            pay_load.setText((f25r.get("Tata Super Ace")).getCapacity() + " Kg");
+            dimension.setText((f25r.get("Tata Super Ace")).getLength() + "x" + (f25r.get("Tata Super Ace")).getWidth() + "x" + (f25r.get("Tata Super Ace")).getHeight());
+            SingleInstance.getInstance().setSelectedRate(f25r.get("Tata Super Ace"));
         } else if (index == 3) {
-            this.key = "Ashok Leyland Dost";
-            this.base_price.setText("Rs " + (this.f25r.get("Ashok Leyland Dost")).getBase_fare());
-            this.per_km_price.setText("Rs " + (this.f25r.get("Ashok Leyland Dost")).getPrice_per_km() + "/km");
-            this.per_min_price.setText("Rs " + (this.f25r.get("Ashok Leyland Dost")).getCharge_after_free_time() + "/Min after " + (this.f25r.get("Ashok Leyland Dost")).getFree_load_unload_time() + " Min");
-            this.pay_load.setText((this.f25r.get("Ashok Leyland Dost")).getCapacity() + " Kg");
-            this.dimension.setText((this.f25r.get("Ashok Leyland Dost")).getLength() + "x" + (this.f25r.get("Ashok Leyland Dost")).getWidth() + "x" + (this.f25r.get("Ashok Leyland Dost")).getHeight());
-            SingleInstance.getInstance().setSelectedRate(this.f25r.get("Ashok Leyland Dost"));
+            key = "Ashok Leyland Dost";
+            base_price.setText("Rs " + (f25r.get("Ashok Leyland Dost")).getBase_fare());
+            per_km_price.setText("Rs " + (f25r.get("Ashok Leyland Dost")).getPrice_per_km() + "/km");
+            per_min_price.setText("Rs " + (f25r.get("Ashok Leyland Dost")).getCharge_after_free_time() + "/Min after " + (f25r.get("Ashok Leyland Dost")).getFree_load_unload_time() + " Min");
+            pay_load.setText((f25r.get("Ashok Leyland Dost")).getCapacity() + " Kg");
+            dimension.setText((f25r.get("Ashok Leyland Dost")).getLength() + "x" + (f25r.get("Ashok Leyland Dost")).getWidth() + "x" + (f25r.get("Ashok Leyland Dost")).getHeight());
+            SingleInstance.getInstance().setSelectedRate(f25r.get("Ashok Leyland Dost"));
         } else if (index == 4) {
-            this.key = "Bolero Pick Up";
-            this.base_price.setText("Rs " + (this.f25r.get("Bolero Pick Up")).getBase_fare());
-            this.per_km_price.setText("Rs " + (this.f25r.get("Bolero Pick Up")).getPrice_per_km() + "/km");
-            this.per_min_price.setText("Rs " + (this.f25r.get("Bolero Pick Up")).getCharge_after_free_time() + "/Min after " + (this.f25r.get("Bolero Pick Up")).getFree_load_unload_time() + " Min");
-            this.pay_load.setText((this.f25r.get("Bolero Pick Up")).getCapacity() + " Kg");
-            this.dimension.setText((this.f25r.get("Bolero Pick Up")).getLength() + "x" + (this.f25r.get("Bolero Pick Up")).getWidth() + "x" + (this.f25r.get("Bolero Pick Up")).getHeight());
-            SingleInstance.getInstance().setSelectedRate(this.f25r.get("Bolero Pick Up"));
+            key = "Bolero Pick Up";
+            base_price.setText("Rs " + (f25r.get("Bolero Pick Up")).getBase_fare());
+            per_km_price.setText("Rs " + (f25r.get("Bolero Pick Up")).getPrice_per_km() + "/km");
+            per_min_price.setText("Rs " + (f25r.get("Bolero Pick Up")).getCharge_after_free_time() + "/Min after " + (f25r.get("Bolero Pick Up")).getFree_load_unload_time() + " Min");
+            pay_load.setText((f25r.get("Bolero Pick Up")).getCapacity() + " Kg");
+            dimension.setText((f25r.get("Bolero Pick Up")).getLength() + "x" + (f25r.get("Bolero Pick Up")).getWidth() + "x" + (f25r.get("Bolero Pick Up")).getHeight());
+            SingleInstance.getInstance().setSelectedRate(f25r.get("Bolero Pick Up"));
         } else if (index == 5) {
-            this.key = "Tata 407";
-            this.base_price.setText("Rs " + (this.f25r.get("Tata 407")).getBase_fare());
-            this.per_km_price.setText("Rs " + (this.f25r.get("Tata 407")).getPrice_per_km() + "/km");
-            this.per_min_price.setText("Rs " + (this.f25r.get("Tata 407")).getCharge_after_free_time() + "/Min after " + (this.f25r.get("Tata 407")).getFree_load_unload_time() + " Min");
-            this.pay_load.setText((this.f25r.get("Tata 407")).getCapacity() + " Kg");
-            this.dimension.setText((this.f25r.get("Tata 407")).getLength() + "x" + (this.f25r.get("Tata 407")).getWidth() + "x" + (this.f25r.get("Tata 407")).getHeight());
-            SingleInstance.getInstance().setSelectedRate(this.f25r.get("Tata 407"));
+            key = "Tata 407";
+            base_price.setText("Rs " + (f25r.get("Tata 407")).getBase_fare());
+            per_km_price.setText("Rs " + (f25r.get("Tata 407")).getPrice_per_km() + "/km");
+            per_min_price.setText("Rs " + (f25r.get("Tata 407")).getCharge_after_free_time() + "/Min after " + (f25r.get("Tata 407")).getFree_load_unload_time() + " Min");
+            pay_load.setText((f25r.get("Tata 407")).getCapacity() + " Kg");
+            dimension.setText((f25r.get("Tata 407")).getLength() + "x" + (f25r.get("Tata 407")).getWidth() + "x" + (f25r.get("Tata 407")).getHeight());
+            SingleInstance.getInstance().setSelectedRate(f25r.get("Tata 407"));
         }
-        if (this.mMap != null) {
-            this.mMap.clear();
-            if (this.driversMap == null) {
+        if (mMap != null) {
+            mMap.clear();
+            if (driversMap == null) {
                 return;
             }
-            if (this.driversMap.containsKey(this.key)) {
-                this.hasDriver = true;
+            if (driversMap.containsKey(key)) {
+                hasDriver = true;
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                builder.include(new LatLng(this.sourceLocation.latitude, this.sourceLocation.longitude));
-                List<Response> r = (List) this.driversMap.get(this.key);
+                builder.include(new LatLng(sourceLocation.latitude, sourceLocation.longitude));
+                List<Response> r = driversMap.get(key);
                 for (int i = 0; i < r.size(); i++) {
-                    builder.include(this.mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(((Response) r.get(i)).getD_lat()), Double.parseDouble(((Response) r.get(i)).getD_lng()))).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_truck_marker))).getPosition());
+                    builder.include(mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(((Response) r.get(i)).getD_lat()), Double.parseDouble(((Response) r.get(i)).getD_lng()))).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_truck_marker))).getPosition());
                 }
-                if (!this.isBookLater) {
-                    setEstimatedTimeText(((Response) r.get(0)).getDistance());
+                if (!isBookLater) {
+                    setEstimatedTimeText((r.get(0)).getDistance());
                 }
-                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(adjustBoundsForMaxZoomLevel(builder.build()), 50);
+//                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(adjustBoundsForMaxZoomLevel(builder.build()), 50);
                 SingleInstance.getInstance().setNotifiableDrivers(r);
                 return;
             }
-            this.hasDriver = false;
-            if (!this.isBookLater) {
-                this.currentBookText = "No Drivers...";
-                this.locMarkertext.setText("No Drivers...");
+            hasDriver = false;
+            if (!isBookLater) {
+                currentBookText = "No Drivers...";
+                locMarkertext.setText("No Drivers...");
             }
         }
     }
@@ -892,47 +902,47 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
     private void setEstimatedTimeText(String distance) {
         double dist = Double.parseDouble(distance);
         if (dist <= 2.0d) {
-            this.locMarkertext.setText("10 Min | Book Now");
-            this.currentBookText = "10 Min | Book Now";
-            this.ETA = "10";
+            locMarkertext.setText("10 Min | Book Now");
+            currentBookText = "10 Min | Book Now";
+            ETA = "10";
         } else if (dist > 2.0d && dist <= 4.0d) {
-            this.locMarkertext.setText("15 Min | Book Now");
-            this.currentBookText = "15 Min | Book Now";
-            this.ETA = "15";
+            locMarkertext.setText("15 Min | Book Now");
+            currentBookText = "15 Min | Book Now";
+            ETA = "15";
         } else if (dist > 4.0d && dist <= 7.0d) {
-            this.locMarkertext.setText("20 Min | Book Now");
-            this.currentBookText = "20 Min | Book Now";
-            this.ETA = "20";
+            locMarkertext.setText("20 Min | Book Now");
+            currentBookText = "20 Min | Book Now";
+            ETA = "20";
         } else if (dist > 7.0d && dist <= 10.0d) {
-            this.locMarkertext.setText("25 Min | Book Now");
-            this.currentBookText = "25 Min | Book Now";
-            this.ETA = "25";
+            locMarkertext.setText("25 Min | Book Now");
+            currentBookText = "25 Min | Book Now";
+            ETA = "25";
         } else if (dist > 10.0d && dist <= 13.0d) {
-            this.locMarkertext.setText("30 Min | Book Now");
-            this.currentBookText = "30 Min | Book Now";
-            this.ETA = "30";
+            locMarkertext.setText("30 Min | Book Now");
+            currentBookText = "30 Min | Book Now";
+            ETA = "30";
         } else if (dist > 13.0d && dist <= 16.0d) {
-            this.locMarkertext.setText("40 Min | Book Now");
-            this.currentBookText = "40 Min | Book Now";
-            this.ETA = "40";
+            locMarkertext.setText("40 Min | Book Now");
+            currentBookText = "40 Min | Book Now";
+            ETA = "40";
         } else if (dist > 16.0d && dist <= 18.0d) {
-            this.locMarkertext.setText("45 Min | Book Now");
-            this.currentBookText = "45 Min | Book Now";
-            this.ETA = "45";
+            locMarkertext.setText("45 Min | Book Now");
+            currentBookText = "45 Min | Book Now";
+            ETA = "45";
         } else if (dist <= 18.0d || dist > 20.0d) {
-            this.locMarkertext.setText("55 Min | Book Now");
-            this.currentBookText = "55 Min | Book Now";
-            this.ETA = "55";
+            locMarkertext.setText("55 Min | Book Now");
+            currentBookText = "55 Min | Book Now";
+            ETA = "55";
         } else {
-            this.locMarkertext.setText("50 Min | Book Now");
-            this.currentBookText = "50 Min | Book Now";
-            this.ETA = "50";
+            locMarkertext.setText("50 Min | Book Now");
+            currentBookText = "50 Min | Book Now";
+            ETA = "50";
         }
     }
 
     public void onItemClicked(int index) {
-        this.img_selected_truck.setImageResource(this.truckImages.getResourceId(index, 0));
-        this.txt_name_truck.setText(this.truckNames[index]);
+        img_selected_truck.setImageResource(truckImages.getResourceId(index, 0));
+        txt_name_truck.setText(truckNames[index]);
     }
 
     private String lastAddress = "";
@@ -956,7 +966,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                 Log.w("address", "" + strAdd);
                 if (returnedAddress.getAdminArea().equals("Odisha") || returnedAddress.getAdminArea().equals("Delhi")
                         || returnedAddress.getAdminArea().contains("Rajasthan")) {
-                    this.mLocationText.setText(strReturnedAddress.toString());
+                    mLocationText.setText(strReturnedAddress.toString());
                     return strAdd;
                 } else {
                     strAdd = "";
@@ -981,10 +991,10 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
 
         if (location != null) {
             try {
-                if (!this.isFirstSet) {
-                    this.sourceLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                if (!isFirstSet) {
+                    sourceLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     changeMap(location);
-                    this.isFirstSet = true;
+                    isFirstSet = true;
                     RequestParams pp = new RequestParams();
                     User u = MyApp.getApplication().readUser();
                     pp.put(AccessToken.USER_ID_KEY, u.getUser_id());
@@ -1010,19 +1020,19 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
     }
 
     public void enableGPS() {
-        if (this.googleApiClient == null) {
-            this.googleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).addOnConnectionFailedListener(new OnConnectionFailedListener() {
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).addOnConnectionFailedListener(new OnConnectionFailedListener() {
                 public void onConnectionFailed(ConnectionResult connectionResult) {
-                    MyApp.showMassage(MainActivity.this.getContext(), "Location error " + connectionResult.getErrorCode());
+                    MyApp.showMassage(getContext(), "Location error " + connectionResult.getErrorCode());
                 }
             }).build();
-            this.googleApiClient.connect();
+            googleApiClient.connect();
             LocationRequest locationRequest = LocationRequest.create();
             locationRequest.setInterval(30000);
             locationRequest.setFastestInterval(5000);
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
             builder.setAlwaysShow(true);
-            LocationServices.SettingsApi.checkLocationSettings(this.googleApiClient, builder.build()).setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build()).setResultCallback(new ResultCallback<LocationSettingsResult>() {
                 public void onResult(LocationSettingsResult result) {
                     Status status = result.getStatus();
                     switch (status.getStatusCode()) {
@@ -1046,7 +1056,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         locationRequest.setFastestInterval(5000);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
         builder.setAlwaysShow(true);
-        LocationServices.SettingsApi.checkLocationSettings(this.googleApiClient, builder.build()).setResultCallback(new ResultCallback<LocationSettingsResult>() {
+        LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build()).setResultCallback(new ResultCallback<LocationSettingsResult>() {
             public void onResult(LocationSettingsResult result) {
                 Status status = result.getStatus();
                 switch (status.getStatusCode()) {
@@ -1072,7 +1082,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             return;
         }
         if (o.optString("status").equals("OK")) {
-            this.driversMap = new HashMap();
+            driversMap = new HashMap();
             NearbyDrivers nd = new Gson().fromJson(o.toString(), NearbyDrivers.class);
             if (nd.getResponse().size() == 0) {
                 if (!isShownNoDriverDialog) {
@@ -1083,28 +1093,28 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             }
             for (int i = 0; i < nd.getResponse().size(); i++) {
                 List<Response> list;
-                if (this.driversMap.containsKey((nd.getResponse().get(i)).getCar_name())) {
-                    list = (List) this.driversMap.get((nd.getResponse().get(i)).getCar_name());
+                if (driversMap.containsKey((nd.getResponse().get(i)).getCar_name())) {
+                    list = (List) driversMap.get((nd.getResponse().get(i)).getCar_name());
                     list.add(nd.getResponse().get(i));
-                    this.driversMap.put((nd.getResponse().get(i)).getCar_name(), list);
+                    driversMap.put((nd.getResponse().get(i)).getCar_name(), list);
                 } else {
                     list = new ArrayList();
                     list.add(nd.getResponse().get(i));
-                    this.driversMap.put((nd.getResponse().get(i)).getCar_name(), list);
+                    driversMap.put((nd.getResponse().get(i)).getCar_name(), list);
                 }
             }
-            onItemSelected(this.selectedTruckIndex);
-        } else if (!this.isBookLater) {
-            this.currentBookText = "No Driver...";
-            this.locMarkertext.setText("No Driver...");
+            onItemSelected(selectedTruckIndex);
+        } else if (!isBookLater) {
+            currentBookText = "No Driver...";
+            locMarkertext.setText("No Driver...");
         }
     }
 
     private LatLngBounds adjustBoundsForMaxZoomLevel(LatLngBounds bounds) {
         LatLng sw = bounds.southwest;
         LatLng ne = bounds.northeast;
-        double deltaLat = Math.abs((sw.latitude - this.sourceLocation.latitude) - (ne.latitude - this.sourceLocation.latitude));
-        double deltaLon = Math.abs((sw.longitude - this.sourceLocation.longitude) - (ne.longitude - this.sourceLocation.longitude));
+        double deltaLat = Math.abs((sw.latitude - sourceLocation.latitude) - (ne.latitude - sourceLocation.latitude));
+        double deltaLon = Math.abs((sw.longitude - sourceLocation.longitude) - (ne.longitude - sourceLocation.longitude));
         LatLng latLng;
         LatLng ne2;
         LatLngBounds latLngBounds;
@@ -1122,11 +1132,11 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             sw = latLng;
         }
         LatLngBounds.Builder displayBuilder = new LatLngBounds.Builder();
-        displayBuilder.include(new LatLng(this.sourceLocation.latitude, this.sourceLocation.longitude));
-        displayBuilder.include(new LatLng(this.sourceLocation.latitude + deltaLat, this.sourceLocation.longitude + deltaLon));
-        displayBuilder.include(new LatLng(this.sourceLocation.latitude - deltaLat, this.sourceLocation.longitude - deltaLon));
-        this.mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(displayBuilder.build(), 100));
-        this.mMap.setMaxZoomPreference(15.5f);
+        displayBuilder.include(new LatLng(sourceLocation.latitude, sourceLocation.longitude));
+        displayBuilder.include(new LatLng(sourceLocation.latitude + deltaLat, sourceLocation.longitude + deltaLon));
+        displayBuilder.include(new LatLng(sourceLocation.latitude - deltaLat, sourceLocation.longitude - deltaLon));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(displayBuilder.build(), 100));
+        mMap.setMaxZoomPreference(15.5f);
         return bounds;
     }
 

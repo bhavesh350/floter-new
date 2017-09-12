@@ -391,6 +391,9 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
     }
 
     private void sendPaymentDoneNotificationToDriver(String payMode) {
+        if (payment == null) {
+            return;
+        }
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams p = new RequestParams();
         p.put("message", "User made payment of Rs. " + this.payment.getPay_amount() + "\nthrough " + payMode);

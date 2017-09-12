@@ -225,8 +225,6 @@ public class CustomActivity extends AppCompatActivity implements
                 } catch (Exception e) {
                     responseCallback.onErrorReceived("No data available");
                 }
-
-
             }
 
             @Override

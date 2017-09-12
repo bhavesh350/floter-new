@@ -186,7 +186,7 @@ public class RegisterActivity extends CustomActivity implements CustomActivity.R
                 return;
             }
             if (TextUtils.isEmpty(edt_email.getText().toString())) {
-                edt_lname.setError("Enter email");
+                edt_email.setError("Enter email");
                 return;
             }
             registerUser(edt_email.getText().toString(), edt_fname.getText().toString(), edt_lname.getText().toString());

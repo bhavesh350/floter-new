@@ -19,8 +19,8 @@ android {
         applicationId "cargo.floter.user"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 13
-        versionName "1.13"
+        versionCode 15
+        versionName "1.15"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -49,6 +49,7 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.google.firebase:firebase-database:10.0.1'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.android.gms:play-services-maps:10.0.1'
