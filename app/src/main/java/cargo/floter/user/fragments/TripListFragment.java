@@ -77,6 +77,7 @@ public class TripListFragment extends CustomFragment {
                 if (!(t2.getTrip_status().equals(TripStatus.Finished.name())
                         || t2.getTrip_status().equals(TripStatus.Pending.name())
                         || t2.getTrip_status().equals(TripStatus.Cancelled.name())
+                        || t2.getTrip_status().equals(TripStatus.Driver_Cancel.name())
                         || t2.getTrip_status().equals(TripStatus.Declined.name())
                         || t2.getTrip_status().equals(TripStatus.Upcoming.name())
                         || t2.getTrip_status().equals(AnalyticsEvents.PARAMETER_DIALOG_OUTCOME_VALUE_UNKNOWN)

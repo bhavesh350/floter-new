@@ -576,7 +576,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         RequestParams p = new RequestParams();
         p.put("lat", lat);
         p.put("lng", lng);
-        p.put("miles", 10);
+        p.put("miles", 5);
         postCall(getContext(), AppConstants.BASE_URL.replace("userapi", "driverapi") + "getnearbydriverlists?", p, "", 1);
     }
 
@@ -955,10 +955,18 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
             if (addresses != null) {
                 Address returnedAddress = addresses.get(0);
                 StringBuilder strReturnedAddress = new StringBuilder("");
-                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
-                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append(", ");
+                if (returnedAddress.getMaxAddressLineIndex() > 0) {
+                    for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                        strReturnedAddress.append(returnedAddress.getAddressLine(i)).append(", ");
+                    }
+                    strAdd = strReturnedAddress.toString();
+                } else {
+                    try {
+                        strAdd = returnedAddress.getAddressLine(0);
+                    } catch (Exception ignored) {
+                    }
                 }
-                strAdd = strReturnedAddress.toString();
+
                 if (!lastAddress.equals(strAdd)) {
                     getNearbyDrivers(LATITUDE + "", LONGITUDE + "");
                 }
@@ -966,7 +974,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
                 Log.w("address", "" + strAdd);
                 if (returnedAddress.getAdminArea().equals("Odisha") || returnedAddress.getAdminArea().equals("Delhi")
                         || returnedAddress.getAdminArea().contains("Rajasthan")) {
-                    mLocationText.setText(strReturnedAddress.toString());
+                    mLocationText.setText(lastAddress);
                     return strAdd;
                 } else {
                     strAdd = "";

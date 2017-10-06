@@ -248,7 +248,12 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
                 polyLineOptions.width(10.0f);
                 polyLineOptions.color(Color.parseColor("#156CB3"));
             }
-            mMap.addPolyline(polyLineOptions);
+            try {
+                if (polyLineOptions != null)
+                    mMap.addPolyline(polyLineOptions);
+            } catch (Exception e) {
+            }
+
         }
     }
 
@@ -496,7 +501,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
         setTouchNClick(R.id.button_submit);
         setClick(R.id.txt_cancel_trip);
         try {
-            txt_user_name.setText(currentTrip.getDriver().getD_name());
+
 //            txt_driver_name.setText(currentTrip.getDriver().getD_name() + "\n" + currentTrip.getDriver().getTruck_reg_no());
             slideUp = new Builder(ll_feedback).withStartState(State.HIDDEN).withStartGravity(80).build();
             slideUp = new Builder(ll_feedback).withListeners(new C09612()).withStartGravity(80).withGesturesEnabled(false).withStartState(State.HIDDEN).build();
@@ -703,10 +708,12 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
                     map.put(tripId, t);
                     MyApp.getApplication().writeTrip(map);
                     txt_driver_name.setText(t.getDriver().getD_name() + "\n" + t.getDriver().getTruck_reg_no());
+                    txt_user_name.setText(t.getDriver().getD_name());
                 }
                 if (!(!t.getTrip_status().equals(TripStatus.Finished.name()) || t.getFloter_id().equals("0") || isTripFinished)) {
                     isTripFinished = true;
                     paymentId = t.getFloter_id();
+                    txt_user_name.setText(t.getDriver().getD_name());
                     showFeedbackForm();
                 }
                 rotatemarker();

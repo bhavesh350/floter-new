@@ -96,6 +96,7 @@ public class TrackTripsActivity extends CustomActivity implements ResponseCallba
                             || t.getTrip_status().equals(TripStatus.Pending.name())
                             || t.getTrip_status().equals(TripStatus.Declined.name())
                             || t.getTrip_status().equals(TripStatus.Cancelled.name())
+                            || t.getTrip_status().equals(TripStatus.Driver_Cancel.name())
                             || t.getTrip_status().equals(AnalyticsEvents.PARAMETER_DIALOG_OUTCOME_VALUE_UNKNOWN)
                             || TextUtils.isEmpty(t.getTrip_status()))) {
                         this.trips.add(t);

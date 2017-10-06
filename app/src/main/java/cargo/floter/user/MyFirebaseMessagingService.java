@@ -68,6 +68,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         sendNotification(remoteMessage.getData().get("message"));
                     } else if (tripStatus.equals(TripStatus.Reached.name())) {
                         sendNotification(remoteMessage.getData().get("message"));
+                    } else if (tripStatus.equals(TripStatus.Driver_Cancel.name())) {
+                        sendNotification(remoteMessage.getData().get("message"));
                     } else {
                         if (tripStatus.equals("Payment")) {
                             MyApp.setSharedPrefString("SHOW_PAY", "YES");
