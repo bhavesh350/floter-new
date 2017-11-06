@@ -172,7 +172,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
             } else if (intent.getStringExtra("TYPE").equals("TRIP_DECLINED")) {
                 driverRequestMethod();
                 handler.removeCallbacks(driverRequestRunnable);
-                handler.postDelayed(driverRequestRunnable, 20000);
+                handler.postDelayed(driverRequestRunnable, 30000);
             }
         }
     }
@@ -216,7 +216,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
         public void onSuccess(int statusCode, Header[] headers, String response) {
             Log.d("Response:", response.toString());
             if (driversIterator.hasNext() && !isDriverSearched) {
-                handler.postDelayed(driverRequestRunnable, 20000);
+                handler.postDelayed(driverRequestRunnable, 30000);
             }
         }
 
@@ -224,7 +224,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
             if (statusCode != 0) {
                 try {
                     if (!isDriverSearched) {
-                        new Handler().postDelayed(new C05662(), 20000);
+                        new Handler().postDelayed(new C05662(), 30000);
                     }
                 } catch (Exception e) {
                 }

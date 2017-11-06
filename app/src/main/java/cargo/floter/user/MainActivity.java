@@ -510,7 +510,6 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         txt_ok.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-//                FIRST_OFFER
                 dialog.dismiss();
             }
         });
@@ -523,61 +522,14 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         dialog.show();
     }
 
-//    private void showPaymentDialog() {
-//        final Dialog dialog = new Dialog(getContext());
-//        dialog.getWindow().requestFeature(1);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-//        dialog.setContentView(R.layout.dialog_paymode);
-//        dialog.setCancelable(false);
-//        TextView txt_pay = (TextView) dialog.findViewById(R.id.txt_pay);
-//        final RadioButton radio_cash = (RadioButton) dialog.findViewById(R.id.radio_cash);
-//        final RadioButton radio_paytm = (RadioButton) dialog.findViewById(R.id.radio_paytm);
-//        radio_cash.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                if (b) {
-//                    radio_cash.setChecked(true);
-//                    radio_paytm.setChecked(false);
-//                    return;
-//                }
-//                radio_paytm.setChecked(true);
-//                radio_cash.setChecked(false);
-//            }
-//        });
-//        radio_paytm.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                if (b) {
-//                    radio_cash.setChecked(false);
-//                    radio_paytm.setChecked(true);
-//                    return;
-//                }
-//                radio_paytm.setChecked(false);
-//                radio_cash.setChecked(true);
-//            }
-//        });
-//        txt_pay.setOnClickListener(new OnClickListener() {
-//            public void onClick(View view) {
-//                if (radio_cash.isChecked()) {
-//                    MyApp.showMassage(getContext(), "Cash");
-//                } else {
-//                    MyApp.showMassage(getContext(), "Paytm");
-//                }
-//                dialog.dismiss();
-//            }
-//        });
-//        LayoutParams lp = new LayoutParams();
-//        lp.copyFrom(dialog.getWindow().getAttributes());
-//        lp.width = -1;
-//        lp.height = -2;
-//        dialog.getWindow().setAttributes(lp);
-//        dialog.show();
-//    }
 
     private void getNearbyDrivers(String lat, String lng) {
         RequestParams p = new RequestParams();
         p.put("lat", lat);
         p.put("lng", lng);
         p.put("miles", 5);
-        postCall(getContext(), AppConstants.BASE_URL.replace("userapi", "driverapi") + "getnearbydriverlists?", p, "", 1);
+        postCall(getContext(), AppConstants.BASE_URL.replace("userapi", "driverapi")
+                + "getnearbydriverlists?", p, "", 1);
     }
 
     private void setupUiElements() {
@@ -662,14 +614,20 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         locationProvider.connect();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (sourceLocation != null && isFirstSet) {
+            getNearbyDrivers(sourceLocation.latitude + "", sourceLocation.longitude + "");
+        }
+    }
+
     protected void onResume() {
         super.onResume();
         if (!MyApp.isLocationEnabled(getContext())) {
             enableGPS();
         }
-//        if (sourceLocation != null && isFirstSet) {
-//            getNearbyDrivers(sourceLocation.latitude + "", sourceLocation.longitude + "");
-//        }
+
         if (MyApp.getSharedPrefString("SHOW_PAY").equals("YES")) {
             startActivity(new Intent(getContext(), FinalPaymentActivity.class));
         }
