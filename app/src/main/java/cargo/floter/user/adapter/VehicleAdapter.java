@@ -33,13 +33,13 @@ public class VehicleAdapter extends Adapter<VehicleAdapter.DataHolder> {
 
         public DataHolder(View itemView) {
             super(itemView);
-            this.title = (TextView) itemView.findViewById(R.id.merchant);
-            this.dimension = (TextView) itemView.findViewById(R.id.dimension);
-            this.subTitle = (TextView) itemView.findViewById(R.id.address_merchant);
-            this.vehicleImage = (ImageView) itemView.findViewById(R.id.vehicle_image);
-            this.load = (TextView) itemView.findViewById(R.id.timestamp);
-            this.ppkm = (TextView) itemView.findViewById(R.id.ppkm);
-            this.ppmin = (TextView) itemView.findViewById(R.id.ppmin);
+            this.title = itemView.findViewById(R.id.merchant);
+            this.dimension = itemView.findViewById(R.id.dimension);
+            this.subTitle = itemView.findViewById(R.id.address_merchant);
+            this.vehicleImage = itemView.findViewById(R.id.vehicle_image);
+            this.load = itemView.findViewById(R.id.timestamp);
+            this.ppkm = itemView.findViewById(R.id.ppkm);
+            this.ppmin = itemView.findViewById(R.id.ppmin);
             this.load.setOnClickListener(this);
         }
 
@@ -63,6 +63,7 @@ public class VehicleAdapter extends Adapter<VehicleAdapter.DataHolder> {
         holder.load.setText("Base Fare : " + item.getBase_fare() + " Rs. for 2 Km");
         holder.ppkm.setText("Price Per Km : " + item.getPrice_per_km() + " Rs. after 2 km");
         holder.ppmin.setText("Load Unload free : " + item.getCharge_after_free_time() + " Rs./min after " + item.getFree_load_unload_time() + " mins");
+        holder.ppmin.setVisibility(View.GONE);
         holder.dimension.setText("LxBxH : " + item.getLength() + "x" + item.getWidth() + "x" + item.getHeight());
         if (item.getCar_name().equals("Tata Ace")) {
             holder.vehicleImage.setImageResource(R.drawable.truck_tata_ace_active);

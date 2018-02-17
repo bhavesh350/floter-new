@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -26,6 +27,13 @@ import java.util.Map;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
+    private LocalBroadcastManager broadcaster;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+    }
 
     /**
      * Called when message is received.
@@ -34,6 +42,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        broadcaster = LocalBroadcastManager.getInstance(this);
         if (MyApp.getStatus(AppConstants.IS_LOGIN)) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             Map<String, String> dataMap = remoteMessage.getData();
@@ -57,6 +66,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 } else if (!tripStatus.equals(TripStatus.Cancelled.name())) {
                     if (tripStatus.equals(TripStatus.Finished.name())) {
+
                         sendNotification(remoteMessage.getData().get("message"));
                     } else if (tripStatus.equals(TripStatus.OnGoing.name())) {
                         sendNotification(remoteMessage.getData().get("message"));
@@ -72,6 +82,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         sendNotification(remoteMessage.getData().get("message"));
                     } else {
                         if (tripStatus.equals("Payment")) {
+                            Intent intent = new Intent("MyData");
+                            intent.putExtra("onWindowFocus", "YES");
+                            broadcaster.sendBroadcast(intent);
                             MyApp.setSharedPrefString("SHOW_PAY", "YES");
                             MyApp.setSharedPrefString(AppConstants.PAYBLE_TRIP_ID, tripId);
                         }

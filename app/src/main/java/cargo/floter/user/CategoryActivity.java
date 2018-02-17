@@ -35,7 +35,7 @@ public class CategoryActivity extends CustomActivity implements CustomActivity.R
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catagory);
-        rv_cat = (RecyclerView) findViewById(R.id.rc_cat);
+        rv_cat =  findViewById(R.id.rc_cat);
 
         horizontalList = new ArrayList<>();
 

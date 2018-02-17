@@ -27,7 +27,7 @@ public class VehicleDetails extends CustomActivity implements ResponseCallback {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vehicle_details);
-        this.toolbar_title = (Toolbar) findViewById(R.id.toolbar);
+        this.toolbar_title =  findViewById(R.id.toolbar);
         setSupportActionBar(this.toolbar_title);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);

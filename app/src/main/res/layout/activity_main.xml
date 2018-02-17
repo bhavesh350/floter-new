@@ -339,6 +339,7 @@
                             android:layout_below="@+id/txt_some"
                             android:layout_centerHorizontal="true"
                             android:text="Rs 2/ min"
+                            android:visibility="gone"
                             android:textColor="@color/black"
                             android:textSize="@dimen/dim_15"
                             android:textStyle="bold" />
@@ -346,12 +347,16 @@
                         <TextView
                             android:id="@+id/txt_loading_time"
                             android:layout_width="wrap_content"
+                            android:visibility="visible"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/per_min_price"
                             android:layout_centerHorizontal="true"
                             android:gravity="center"
-                            android:text="Loading &amp; Unloading free time"
+                            android:alpha=".7"
+                            android:textColor="@color/black"
+                            android:text="GST 5% (extra)"
                             android:textSize="@dimen/dim_15" />
+                        <!--Loading &amp; Unloading free time-->
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -359,7 +364,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dim_15"
                         android:layout_marginRight="@dimen/dim_15"
-                        android:layout_marginTop="@dimen/dim_15">
+                        android:layout_marginTop="@dimen/dim_5">
 
                         <TextView
                             android:id="@+id/pay_load"
@@ -402,6 +407,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:visibility="gone"
                         android:text="GST 5% (extra)"
                         android:textColor="@color/black" />
                 </LinearLayout>

@@ -1,9 +1,11 @@
 package cargo.floter.user;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender.SendIntentException;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,6 +17,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -177,7 +180,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
             if (MyApp.isConnectingToInternet(getContext())) {
                 postCall(getContext(), AppConstants.BASE_URL_TRIP + "gettrips", p, "", 15);
             }
-            mHandler.postDelayed(this, 5000);
+            mHandler.postDelayed(this, 60000);
         }
     }
 
@@ -564,7 +567,23 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
     protected void onStart() {
         super.onStart();
         locationProvider.connect();
+        LocalBroadcastManager.getInstance(this).registerReceiver((mMessageReceiver),
+                new IntentFilter("MyData")
+        );
     }
+
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+//            awaitingDriverLng.setText(intent.getExtras().getDouble("lng"));
+            RequestParams p = new RequestParams();
+            p.put("trip_id", currentTrip.getTrip_id());
+            if (MyApp.isConnectingToInternet(getContext())) {
+                postCall(getContext(), AppConstants.BASE_URL_TRIP + "gettrips", p, "", 15);
+            }
+        }
+    };
 
     protected void onResume() {
         super.onResume();
@@ -585,6 +604,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
     protected void onStop() {
         super.onStop();
         locationProvider.disconnect();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
     }
 
     public void onMapReady(GoogleMap googleMap) {
@@ -658,7 +678,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
                     mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(adjustBoundsForMaxZoomLevel(builder.build()), 100));
                     String url = getMapsApiDirectionsUrl(sourceMarker.getPosition(), destMarker.getPosition());
                     new ReadTask().execute(new String[]{url});
-                    mHandler.postDelayed(mUpdateDriverLocationToShow, 3000);
+                    mHandler.postDelayed(mUpdateDriverLocationToShow, 10000);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -921,7 +941,7 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
         p.put("object", "\"{\"json\":\"json\"}\"");
         p.put("android", currentTrip.getDriver().getD_device_token());
         client.setTimeout(30000);
-        client.post("http://floter.in/floterapi/push/DriverPushNotification?", p, new JsonHttpResponseHandler() {
+        client.post("http://floter.in/floterapi/push/DriverPushNotification.php?", p, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, String response) {
                 Log.d("Response:", response.toString());
             }
@@ -1291,6 +1311,13 @@ public class OnTripActivity extends CustomActivity implements ResponseCallback, 
 
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+
+        RequestParams p = new RequestParams();
+        p.put("trip_id", currentTrip.getTrip_id());
+        if (MyApp.isConnectingToInternet(getContext())) {
+            postCall(getContext(), AppConstants.BASE_URL_TRIP + "gettrips", p, "", 15);
+        }
+
         if (MyApp.getSharedPrefString("SHOW_PAY").equals("YES") && !paymentId.equals(AppEventsConstants.EVENT_PARAM_VALUE_NO)) {
             if (currentTrip.getTrip_status().equals(TripStatus.Finished.name()) || currentTrip.getTrip_status().equals(TripStatus.Unloading.name())) {
                 try {

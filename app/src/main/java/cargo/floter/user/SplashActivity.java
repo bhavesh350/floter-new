@@ -172,11 +172,15 @@ public class SplashActivity extends CustomActivity {
                             info = manager.getPackageInfo(
                                     getPackageName(), 0);
                             String version = info.versionCode + "";
-                            if (version.equals(value)) {
+                            if (version.equals(value) /*&& !value.equals("24")*/) {
                                 startActivity(new Intent(
                                         SplashActivity.this, LoginActivity.class
                                 ));
                                 finish();
+                            } else if (value.equals("24")) {
+                                MyApp.popMessageAndFinish("Floter", "Advanced work is under process," +
+                                        " we will update you soon.\nThank you", SplashActivity.this);
+
                             } else {
                                 AlertDialog.Builder b = new AlertDialog.Builder(SplashActivity.this);
                                 b.setTitle("Update App");

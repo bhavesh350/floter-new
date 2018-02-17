@@ -139,6 +139,73 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
     private String[] truckNames = null;
     private TextView txt_name_truck;
 
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        mToolbar =  findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        locationProvider = new LocationProvider(this, this, this);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        setResponseListener(this);
+        base_price =  findViewById(R.id.base_price);
+        per_km_price =  findViewById(R.id.per_km_price);
+        per_min_price =  findViewById(R.id.per_min_price);
+        pay_load =  findViewById(R.id.pay_load);
+        mLocationText =  findViewById(R.id.Locality);
+        locMarkertext =  findViewById(R.id.locMarkertext);
+        dimension =  findViewById(R.id.dimension);
+        img_selected_truck =  findViewById(R.id.img_selected_truck);
+        txt_name_truck =  findViewById(R.id.txt_name_truck);
+        click_truck =  findViewById(R.id.click_truck);
+        ll_info = findViewById(R.id.ll_info);
+        mapFragment.getMapAsync(this);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        HorizontalPicker picker = (HorizontalPicker) findViewById(R.id.picker);
+        picker.setOnItemClickedListener(this);
+        picker.setOnItemSelectedListener(this);
+        truckImages = getResources().obtainTypedArray(R.array.truckIconsActive);
+        truckNames = getResources().getStringArray(R.array.truck_names);
+        locMarkertext.setText("Searching Drivers...");
+        currentBookText = "Searching Drivers...";
+        rateCard = MyApp.getApplication().readRateCard();
+        for (int i = 0; i < rateCard.getResponse().size(); i++) {
+            f25r.put((rateCard.getResponse().get(i)).getCar_name(), rateCard.getResponse().get(i));
+        }
+        try {
+            base_price.setText("Rs " + (f25r.get("Piaggio Ape")).getBase_fare());
+            per_km_price.setText("Rs " + (f25r.get("Piaggio Ape")).getPrice_per_km() + "/km");
+            per_min_price.setText("Rs " + (f25r.get("Piaggio Ape")).getCharge_after_free_time() + "/Min after " + (f25r.get("Piaggio Ape")).getFree_load_unload_time() + " Min");
+            pay_load.setText((f25r.get("Piaggio Ape")).getCapacity() + " Kg");
+            dimension.setText((f25r.get("Piaggio Ape")).getLength() + "x" + (f25r.get("Piaggio Ape")).getWidth() + "x" + (f25r.get("Piaggio Ape")).getHeight());
+        } catch (Exception e) {
+        }
+        actionBar.setTitle("");
+        drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+        drawerFragment.setDrawerListener(this);
+        setupUiElements();
+        mLocationText.setOnClickListener(new C05701());
+        ll_info.setOnClickListener(new C05712());
+        slideUp = new Builder(ll_info).withStartState(State.HIDDEN).withStartGravity(80).build();
+        slideUp = new Builder(ll_info).withListeners(new C09603()).withStartGravity(80).withGesturesEnabled(false).withStartState(State.HIDDEN).build();
+        click_truck.setOnClickListener(new C05724());
+        ll_info.setOnClickListener(new C05735());
+        new Handler().postDelayed(new C05746(), 10000);
+
+        if (MyApp.getStatus(AppConstants.FIRST_OFFER)) {
+            showFirstOfferDialog();
+        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isShownNoDriverDialog = false;
+            }
+        }, 2000);
+
+        Log.d("DeviceToken", "" + MyApp.getSharedPrefString(AppConstants.DEVICE_TOKEN));
+    }
     class C05701 implements OnClickListener {
         C05701() {
         }
@@ -430,73 +497,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         }
     }
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        locationProvider = new LocationProvider(this, this, this);
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        setResponseListener(this);
-        base_price = (TextView) findViewById(R.id.base_price);
-        per_km_price = (TextView) findViewById(R.id.per_km_price);
-        per_min_price = (TextView) findViewById(R.id.per_min_price);
-        pay_load = (TextView) findViewById(R.id.pay_load);
-        mLocationText = (TextView) findViewById(R.id.Locality);
-        locMarkertext = (TextView) findViewById(R.id.locMarkertext);
-        dimension = (TextView) findViewById(R.id.dimension);
-        img_selected_truck = (ImageView) findViewById(R.id.img_selected_truck);
-        txt_name_truck = (TextView) findViewById(R.id.txt_name_truck);
-        click_truck = (RelativeLayout) findViewById(R.id.click_truck);
-        ll_info = (RelativeLayout) findViewById(R.id.ll_info);
-        mapFragment.getMapAsync(this);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        HorizontalPicker picker = (HorizontalPicker) findViewById(R.id.picker);
-        picker.setOnItemClickedListener(this);
-        picker.setOnItemSelectedListener(this);
-        truckImages = getResources().obtainTypedArray(R.array.truckIconsActive);
-        truckNames = getResources().getStringArray(R.array.truck_names);
-        locMarkertext.setText("Searching Drivers...");
-        currentBookText = "Searching Drivers...";
-        rateCard = MyApp.getApplication().readRateCard();
-        for (int i = 0; i < rateCard.getResponse().size(); i++) {
-            f25r.put((rateCard.getResponse().get(i)).getCar_name(), rateCard.getResponse().get(i));
-        }
-        try {
-            base_price.setText("Rs " + (f25r.get("Piaggio Ape")).getBase_fare());
-            per_km_price.setText("Rs " + (f25r.get("Piaggio Ape")).getPrice_per_km() + "/km");
-            per_min_price.setText("Rs " + (f25r.get("Piaggio Ape")).getCharge_after_free_time() + "/Min after " + (f25r.get("Piaggio Ape")).getFree_load_unload_time() + " Min");
-            pay_load.setText((f25r.get("Piaggio Ape")).getCapacity() + " Kg");
-            dimension.setText((f25r.get("Piaggio Ape")).getLength() + "x" + (f25r.get("Piaggio Ape")).getWidth() + "x" + (f25r.get("Piaggio Ape")).getHeight());
-        } catch (Exception e) {
-        }
-        actionBar.setTitle("");
-        drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
-        drawerFragment.setDrawerListener(this);
-        setupUiElements();
-        mLocationText.setOnClickListener(new C05701());
-        ll_info.setOnClickListener(new C05712());
-        slideUp = new Builder(ll_info).withStartState(State.HIDDEN).withStartGravity(80).build();
-        slideUp = new Builder(ll_info).withListeners(new C09603()).withStartGravity(80).withGesturesEnabled(false).withStartState(State.HIDDEN).build();
-        click_truck.setOnClickListener(new C05724());
-        ll_info.setOnClickListener(new C05735());
-        new Handler().postDelayed(new C05746(), 10000);
 
-        if (MyApp.getStatus(AppConstants.FIRST_OFFER)) {
-            showFirstOfferDialog();
-        }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                isShownNoDriverDialog = false;
-            }
-        }, 2000);
-
-        Log.d("DeviceToken", "" + MyApp.getSharedPrefString(AppConstants.DEVICE_TOKEN));
-    }
 
     private void showFirstOfferDialog() {
 
@@ -505,7 +506,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setContentView(R.layout.dialog_offer);
         dialog.setCancelable(false);
-        TextView txt_ok = (TextView) dialog.findViewById(R.id.txt_ok);
+        TextView txt_ok =  dialog.findViewById(R.id.txt_ok);
 
         txt_ok.setOnClickListener(new OnClickListener() {
             @Override
@@ -908,6 +909,7 @@ public class MainActivity extends CustomActivity implements ResponseCallback, Fr
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
 
         String strAdd = "";
+
         try {
             List<Address> addresses = new Geocoder(this, Locale.getDefault()).getFromLocation(LATITUDE, LONGITUDE, 1);
             if (addresses != null) {

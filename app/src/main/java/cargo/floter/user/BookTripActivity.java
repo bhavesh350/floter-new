@@ -172,7 +172,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
             } else if (intent.getStringExtra("TYPE").equals("TRIP_DECLINED")) {
                 driverRequestMethod();
                 handler.removeCallbacks(driverRequestRunnable);
-                handler.postDelayed(driverRequestRunnable, 30000);
+                handler.postDelayed(driverRequestRunnable, 40000);
             }
         }
     }
@@ -216,7 +216,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
         public void onSuccess(int statusCode, Header[] headers, String response) {
             Log.d("Response:", response.toString());
             if (driversIterator.hasNext() && !isDriverSearched) {
-                handler.postDelayed(driverRequestRunnable, 30000);
+                handler.postDelayed(driverRequestRunnable, 40000);
             }
         }
 
@@ -224,7 +224,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
             if (statusCode != 0) {
                 try {
                     if (!isDriverSearched) {
-                        new Handler().postDelayed(new C05662(), 30000);
+                        new Handler().postDelayed(new C05662(), 40000);
                     }
                 } catch (Exception e) {
                 }
@@ -526,7 +526,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
                 p.put("object", jo.toString());
                 AsyncHttpClient client = new AsyncHttpClient();
                 client.setTimeout(30000);
-                client.post("http://floter.in/floterapi/push/DriverPushNotification?", p, new C10927());
+                client.post("http://floter.in/floterapi/push/DriverPushNotification.php?", p, new C10927());
             } else {
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -595,7 +595,7 @@ public class BookTripActivity extends CustomActivity implements ResponseCallback
     }
 
     public void onErrorReceived(String error) {
-        MyApp.showMassage(getContext(), "Some error occurred");
+//        MyApp.showMassage(getContext(), "Some error occurred");
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

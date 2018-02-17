@@ -402,7 +402,7 @@ public class FinalPaymentActivity extends CustomActivity implements ResponseCall
         p.put("object", "\"{\"json\":\"json\"}\"");
         p.put("android", currentTrip.getDriver().getD_device_token());
         client.setTimeout(30000);
-        client.post("http://floter.in/floterapi/push/DriverPushNotification?", p, new JsonHttpResponseHandler() {
+        client.post("http://floter.in/floterapi/push/DriverPushNotification.php?", p, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, String response) {
                 Log.d("Response:", response.toString());
             }
